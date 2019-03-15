@@ -1,0 +1,106 @@
+/*
+ * This is is imported by virtue of "sass.etc" in "app.json".
+ */
+
+
+/*
+ * This is is imported by virtue of "sass.etc" in "app.json".
+ */
+
+root {
+    display: block;
+}
+
+.background-size-contain,
+.home-button {
+    background-size: contain !important;
+    background-position: center !important;
+}
+
+.sel-all {
+    background-image: url(images/ok-icon.png)!important;
+}
+
+.sel-none {
+    background-image: url(images/cancel-icon.png)!important;
+}
+
+
+/*.home-button{
+    background-image:url(images/home-icon.png) !important; 
+    background-position: center;
+    background-size: contain;
+}*/
+
+.help-button {
+    background-image: url(images/help.png) !important;
+    background-position: center;
+    background-size: contain;
+}
+
+.x-tree-icon-parent {
+    background-image: url(images/tree/folder.png)!important;
+    background-position: center;
+    background-size: contain;
+}
+
+.x-grid-tree-node-expanded .x-tree-icon-parent-expanded {
+    background-image: url(images/tree/opened_folder.png)!important;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.x-form-cb-checked .x-form-checkbox-default {
+    background-image: url(images/tree/checked.png)!important;
+    background-position: center !important;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.x-tree-checkbox {
+    background-image: url(images/tree/unchecked.png)!important;
+    background-position: center !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+}
+
+.x-tree-checkbox-checked {
+    background-image: url(images/tree/checked.png)!important;
+    background-position: center !important;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.x-form-checkbox-default {
+    background-image: url(images/tree/unchecked.png)!important;
+    background-position: center !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+}
+
+.x-tree-icon-leaf {
+    background-image: url(images/tree/childel.png)!important;
+    background-position: center;
+    background-size: contain;
+}
+
+.remove-line-column {
+    border-width: 0px !important;
+    font-weight: bold;
+    vertical-align: middle!important;
+}
+
+
+/*оцентровываем текст по центру широкой строки*/
+
+.vertical-align-row {
+    vertical-align: middle!important;
+    /*white-space: normal!important;*/
+}
+
+
+/*.x-grid-cell-inner {
+   overflow: hidden;
+   white-space: normal;
+}*/
