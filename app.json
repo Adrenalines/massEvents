@@ -21,8 +21,7 @@
      * application resides (the same folder in which this file is located).
      */
     "classpath": [
-        "app",
-        "${toolkit.name}/src"
+        "app"
     ],
 
     /**
@@ -33,8 +32,7 @@
      * in the "override" property is also included.
      */
     "overrides": [
-        "overrides",
-        "${toolkit.name}/overrides"
+        "overrides"
     ],
 
     /**
@@ -67,7 +65,10 @@
      *      ]
      */
     "requires": [
-        "font-awesome"
+        "font-awesome",
+        "objectstree",
+        "settingspanel",
+        "visualisationpanel"
     ],
 
     /**
@@ -137,8 +138,7 @@
          *      +-----------------+
          */
         "etc": [
-            "sass/etc/all.scss",
-            "${toolkit.name}/sass/etc/all.scss"
+            "sass/etc/all.scss"
         ],
 
         /**
@@ -163,8 +163,7 @@
          */
         "var": [
             "sass/var/all.scss",
-            "sass/var",
-            "${toolkit.name}/sass/var"
+            "sass/var"
         ],
 
         /**
@@ -184,8 +183,7 @@
          *      +-----------------+
          */
         "src": [
-            "sass/src",
-            "${toolkit.name}/sass/var"
+            "sass/src"
         ]
     },
 
@@ -231,21 +229,26 @@
      *
      */
     "js": [{
-        "path": "app.js",
-        "bundle": true
-    }, {
-        "path": "http://10.41.220.5/resources/Highcharts-5.0.12/code/highcharts.js",
-        "remote": true
-    }, {
-        "path": "http://10.41.220.5/resources/Highcharts-5.0.12/code/modules/exporting.js",
-        "remote": true
-    }, {
-        "path": "http://10.41.220.5/resources/rus-lang.js",
-        "remote": true
-    }, {
-        "path": "http://10.41.220.5/resources/locale-ru.js",
-        "remote": true
-    }],
+            "path": "app.js",
+            "bundle": true
+        },
+        {
+            "path": "/resources/Highcharts-5.0.12/code/highcharts.js",
+            "remote": true
+        },
+        {
+            "path": "/resources/Highcharts-5.0.12/code/modules/exporting.js",
+            "remote": true
+        },
+        {
+            "path": "/resources/rus-lang.js",
+            "remote": true
+        },
+        {
+            "path": "/resources/locale-ru.js",
+            "remote": true
+        }
+    ],
 
 
 
@@ -418,10 +421,6 @@
         "base": "${workspace.build.dir}/${build.environment}/${app.name}",
         "appCache": {
             "enable": false
-        },
-        "page": {
-            "path": "index.html",
-            "enable": true
         }
     },
 
@@ -476,16 +475,9 @@
      * property of the "output" object. Folders specified in this list will be deeply copied.
      */
     "resources": [{
-            "path": "resources",
-            "output": "shared"
-        },
-        {
-            "path": "${toolkit.name}/resources"
-        },
-        {
-            "path": "${build.id}/resources"
-        }
-    ],
+        "path": "resources",
+        "output": "shared"
+    }],
 
     /**
      * Directory path to store all previous production builds. Note that the content

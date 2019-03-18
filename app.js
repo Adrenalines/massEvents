@@ -9,6 +9,7 @@ Ext.application({
     extend: 'MassEvents.Application',
 
     requires: [
+        'MassEvents.globals.Constants',
         'MassEvents.view.main.Main'
     ],
 
