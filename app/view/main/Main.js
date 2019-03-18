@@ -24,7 +24,7 @@ Ext.define('MassEvents.view.main.Main', {
     viewModel: 'main',
     layout: {
         type: 'border',
-        align: 'stretch'
+        //align: 'stretch'
     },
     defaults: {
         border: 2
@@ -45,7 +45,7 @@ Ext.define('MassEvents.view.main.Main', {
             xtype: 'options',
             flex: 0.2,
             region: 'east'
-        }
+        },
     ],
     listeners: {
         afterrender: 'onRenderMain'

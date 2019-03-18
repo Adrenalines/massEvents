@@ -26,10 +26,8 @@ Ext.define('MassEvents.Application', {
     },
 
     onAppUpdate: function() {
-        var ver = Global.getLastChange();
-        Ext.Msg.alert('Приложение было обновлено до версии ' + ver.version, 'Список важных изменений:' + ver.lastChange +
-            ' <br><br><p><b> Для продолжения работы понадобится перезагрузка страницы</b>',
-            function(choice) {
+        Ext.Msg.alert('Модуль обновлен!', 'В модуль внесены изменения. Для корректной работы модуля его необходимо обновить, нажав "OK".',
+            function() {
                 window.location.reload();
             });
     }

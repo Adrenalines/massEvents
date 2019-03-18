@@ -28,9 +28,9 @@ Ext.define('MassEvents.view.chart.toolbar', {
                 items: [{
                         icon: 'resources/images/home-icon.png',
                         iconCls: 'background-size-contain',
-                        tooltip: 'На гланый портал ДПиОС',
+                        tooltip: 'На главную страницу портала',
                         handler: function() {
-                            window.open('http://10.41.220.5');
+                            window.open('/');
                         }
                     },
                     {
@@ -41,11 +41,12 @@ Ext.define('MassEvents.view.chart.toolbar', {
                     {
                         reference: 'startDate',
                         xtype: 'datefield',
-                        format: 'd/m/Y',
-                        value: new Date(new Date() - 86400000 * 30),
+                        format: 'Y-m-d H:00',
+                        submitFormat: 'Y-m-d H:00',
+                        value: new Date(new Date() - 86400000),
                         maxValue: new Date(),
                         grow: true,
-                        editable: false
+                        editable: true
                     },
                     {
                         xtype: 'displayfield',
@@ -55,11 +56,12 @@ Ext.define('MassEvents.view.chart.toolbar', {
                     {
                         reference: 'endDate',
                         xtype: 'datefield',
-                        format: 'd/m/Y',
+                        format: 'Y-m-d H:00',
+                        submitFormat: 'Y-m-d H:00',
+                        startDay: 1,
                         value: new Date(),
-                        //                                   maxValue: new Date(),
                         grow: true,
-                        editable: false
+                        editable: true
                     },
                     {
                         xtype: 'displayfield',
@@ -90,24 +92,20 @@ Ext.define('MassEvents.view.chart.toolbar', {
                         reference: 'AgregationButton',
                         xtype: 'segmentedbutton',
                         items: [{
-                                text: 'Daily',
-                                inputValue: '[-1], [-3], [-7], [-10], [-14], [-30], [-60], [-90]',
-                                defaultPeriod: '-30',
-                                chartPointInterval: 24,
+                                text: 'Hourly',
+                                inputValue: '[-1], [-3], [-6], [-12], [-18], [-24], [-48], [-72], [-96], [-120], [-148]',
+                                defaultPeriod: '-1',
+                                chartPointInterval: 1,
                                 pressed: true
                             },
                             {
-                                text: 'Weekly',
-                                inputValue: '[-7], [-14], [-30], [-60], [-90], [-180], [-360],[-720]',
-                                defaultPeriod: '-90',
-                                chartPointInterval: 24 * 7
-                            },
-                            {
-                                text: 'Monthly',
-                                inputValue: '[-90], [-180], [-360],[-720]',
-                                defaultPeriod: '-90',
-                                chartPointInterval: 24 * 7 * 4
+                                text: 'Daily',
+                                inputValue: '[-24], [-48], [-72], [-96], [-120], [-148]',
+                                defaultPeriod: '-24',
+                                chartPointInterval: 24,
+
                             }
+
                         ],
                         listeners: {
                             toggle: 'toggleBut'
@@ -126,17 +124,17 @@ Ext.define('MassEvents.view.chart.toolbar', {
                             disabled: true
                         },
                         items: [
-                            { text: '1d', inputValue: '-1', disabled: false },
-                            { text: '3d', inputValue: '-3', disabled: false },
-                            { text: '7d', inputValue: '-7', disabled: false },
-                            { text: '10d', inputValue: '-10', disabled: false },
-                            { text: '14d', inputValue: '-14', disabled: false },
-                            { text: '1m', inputValue: '-30', disabled: false, pressed: true },
-                            { text: '2m', inputValue: '-60', disabled: false },
-                            { text: '3m', inputValue: '-90', disabled: false },
-                            { text: '6m', inputValue: '-180' },
-                            { text: '12m', inputValue: '-360' },
-                            { text: '24m', inputValue: '-720' }
+                            { text: '1h', inputValue: '-1', disabled: false, pressed: true },
+                            { text: '3h', inputValue: '-3', disabled: false },
+                            { text: '6h', inputValue: '-6', disabled: false },
+                            { text: '12h', inputValue: '-12', disabled: false },
+                            { text: '18h', inputValue: '-18', disabled: false },
+                            { text: '1d', inputValue: '-24', disabled: false },
+                            { text: '2d', inputValue: '-48', disabled: false },
+                            { text: '3d', inputValue: '-72', disabled: false },
+                            { text: '4d', inputValue: '-96', disabled: false },
+                            { text: '5d', inputValue: '-120', disabled: false },
+                            { text: '6d', inputValue: '-148', disabled: false }
                         ],
                         listeners: {
                             toggle: 'togglePeriodBut'
@@ -171,7 +169,7 @@ Ext.define('MassEvents.view.chart.toolbar', {
                 margin: '6 10 5 5',
                 iconCls: 'background-size-contain',
                 icon: 'resources/images/help.png',
-                //                         link: '/Help_doc_web/availreg/Help_availReg.docx',
+                link: '/Help_doc_web/availreg/Help_availReg.docx',
                 handler: function(but) {
                     window.open(but.link);
                 }
