@@ -10,10 +10,6 @@ $response = array();
 $width = $_REQUEST['width'];
 $height = $_REQUEST['height'];
 $browserName = $_REQUEST['browserName'];
-//$browserVersion = $_REQUEST['browserVersion'];
-//$userAgent = $_REQUEST['userAgent'];
-//$osName = $_REQUEST['osName'];
-//$osDeviceType = $_REQUEST['osDeviceType'];
 $windowZoomLvl = $_REQUEST['windowZoomLvl'];
 $response = array(
 );
