@@ -4,7 +4,7 @@ function checkaccess() {
      $url = $_SERVER['REQUEST_URI'];
      $projectname = explode("/", $url);
      $projectname = strtolower($projectname[1]);
-     $projectname = 'availReg';
+     $projectname = 'webReport_v2';
      $conn = odbc_connect("DSN=stat_serv;", "", "");
      $userlogin = $_SERVER['REMOTE_USER'];
      $sql = "SELECT project_name_in_userstable FROM dbo. AC_projects_url WHERE url='$projectname'";

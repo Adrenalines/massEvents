@@ -1,77 +1,223 @@
 <?php
 
-//require_once 'checkaccess.php';
-//checkaccess();
 set_time_limit(36000 * 6);
 require_once 'functions.php';
 $conn = connect();
 
-if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'NEW_MR_TREE') {
-     $sql = "exec [availReg].[MAIN] @TYPE = '{$_REQUEST['type']}'";
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'NEW_GR_TREE') {
+     $sql = "select distinct gruppa
+             FROM [Stat_Result].[dbo].[T_massEvents_GR_List]
+             ORDER BY gruppa";
      $result = odbc_exec($conn, $sql);
      $data = getData($result);
      $i = 0;
      while ($data[$i]) {
-          $sql = "exec [availReg].[MAIN] @TYPE = 'NEW_REGION_TREE', @MR = '{$data[$i]['Id']}'";
+          $data[$i]['id'] = $data[$i]['gruppa'];
+          $data[$i]['name'] = $data[$i]['gruppa'];
+          $data[$i]['text'] = $data[$i]['gruppa'];
+          $data[$i]['checked'] = false;
+          $data[$i]['leaf'] = false;
+          $sql = "select distinct external_key
+                  FROM [Stat_Result].[dbo].[T_massEvents_GR_List] m where gruppa = '{$data[$i]['gruppa']}'
+                  ORDER BY external_key";
           $result = odbc_exec($conn, $sql);
           $dt = getData($result);
           $j = 0;
           while ($dt[$j]) {
+               $dt[$j]['id'] = $dt[$j]['external_key'];
+               $dt[$j]['name'] = $dt[$j]['external_key'];
+               $dt[$j]['text'] = $dt[$j]['external_key'];
                $dt[$j]['checked'] = false;
                $dt[$j]['leaf'] = true;
                $j++;
           }
           $data[$i]['children'] = $dt;
-          if ($data[$i]['Name'] === 'БЕР') {
-               $data[$i]['checked'] = false;
-          } else {
-               $data[$i]['checked'] = true;
-          }
-//          if ($_REQUEST['type'] == 'NEW_MR_TREE_ALARM') {
-//               $data[$i]['checked'] = false;
-//          } else {
-//               $data[$i]['checked'] = true;
-//          }
           $i++;
+          $j = 0;
+          $data[$j]['children'][$j]['checked'] = true;
+          $data[$j]['expanded'] = true;
      }
      returnData($data);
 } else
 
-if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'CLUSTER_TREE') {
-     $sql = "exec FIKSSI_MAIN @TYPE = '{$_REQUEST['type']}'";
-     $result = odbc_exec($conn, $sql);
-     $data = getData($result);
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'SLA_LOAD_TREE') {
+     $sql1 = "SELECT DISTINCT MREG
+              FROM [Stat_Result].[dbo].[T_massEvents_SLA_Load_List]
+              ORDER BY MREG";
+     $result1 = odbc_exec($conn, $sql1);
+     $data = getData($result1);
      $i = 0;
      while ($data[$i]) {
-          $sql = "exec FIKSSI_MAIN @TYPE = 'CLUSTER_REGION_TREE', @CLUSTER_ID = '{$data[$i]['Id']}'";
-
-          $result = odbc_exec($conn, $sql);
-          $dt = getData($result);
+          $data[$i]['id'] = $data[$i]['MREG'];
+          $data[$i]['name'] = $data[$i]['MREG'];
+          $data[$i]['text'] = $data[$i]['MREG'];
+          $data[$i]['checked'] = false;
+          $data[$i]['leaf'] = false;
+          $normStrMREG = iconv('utf-8', 'cp1251', $data[$i]['MREG']);
+          $sql2 = "SELECT DISTINCT REG
+                   FROM [Stat_Result].[dbo].[T_massEvents_SLA_Load_List]
+                   WHERE MREG = '$normStrMREG'
+                   ORDER BY REG";
+          $result2 = odbc_exec($conn, $sql2);
+          $dt = getData($result2);
           $j = 0;
           while ($dt[$j]) {
+               $dt[$j]['id'] = $dt[$j]['REG'];
+               $dt[$j]['name'] = $dt[$j]['REG'];
+               $dt[$j]['text'] = $dt[$j]['REG'];
+               $dt[$j]['checked'] = false;
+               $dt[$j]['leaf'] = false;
+               $normStrREG = iconv('utf-8', 'cp1251', $dt[$j]['REG']);
+               $sql3 = "SELECT DISTINCT EXTERNAL_KEY
+                        FROM [Stat_Result].[dbo].[T_massEvents_SLA_Load_List]
+                        WHERE REG = '$normStrREG'
+                        ORDER BY EXTERNAL_KEY";
+               $result3 = odbc_exec($conn, $sql3);
+               $st = getData($result3);
+               $k = 0;
+               while ($st[$k]) {
+                    $st[$k]['id'] = $st[$k]['EXTERNAL_KEY'];
+                    $st[$k]['name'] = $st[$k]['EXTERNAL_KEY'];
+                    $st[$k]['text'] = $st[$k]['EXTERNAL_KEY'];
+                    $st[$k]['checked'] = false;
+                    $st[$k]['leaf'] = true;
+                    $k++;
+               }
+               $dt[$j]['children'] = $st;
+               $j++;
+          }
+          $data[$i]['children'] = $dt;
+          $i++;
+     }
+     $k = 0;
+     $data[$k]['expanded'] = true;
+     $data[$k]['children'][$k]['expanded'] = true;
+     returnData($data);
+} else
+
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'GEO_LOAD_TREE') {
+     $sql1 = "SELECT DISTINCT MREG
+              FROM [Stat_Result].[dbo].[T_massEvents_GEO_Load_List]
+              ORDER BY MREG";
+     $result1 = odbc_exec($conn, $sql1);
+     $data = getData($result1);
+     $i = 0;
+     while ($data[$i]) {
+          $data[$i]['id'] = $data[$i]['MREG'];
+          $data[$i]['name'] = $data[$i]['MREG'];
+          $data[$i]['text'] = $data[$i]['MREG'];
+          $data[$i]['checked'] = false;
+          $data[$i]['leaf'] = false;
+          $normStrMREG = iconv('utf-8', 'cp1251', $data[$i]['MREG']);
+          $sql2 = "SELECT DISTINCT REG
+                   FROM [Stat_Result].[dbo].[T_massEvents_GEO_Load_List]
+                   WHERE MREG = '$normStrMREG'
+                   ORDER BY REG";
+          $result2 = odbc_exec($conn, $sql2);
+          $dt = getData($result2);
+          $j = 0;
+          while ($dt[$j]) {
+               $dt[$j]['id'] = $dt[$j]['REG'];
+               $dt[$j]['name'] = $dt[$j]['REG'];
+               $dt[$j]['text'] = $dt[$j]['REG'];
+               $dt[$j]['checked'] = false;
+               $dt[$j]['leaf'] = false;
+               $normStrREG = iconv('utf-8', 'cp1251', $dt[$j]['REG']);
+               $sql3 = "SELECT DISTINCT GEO_UNIT
+                        FROM [Stat_Result].[dbo].[T_massEvents_GEO_Load_List]
+                        WHERE REG = '$normStrREG'
+                        ORDER BY GEO_UNIT";
+               $result3 = odbc_exec($conn, $sql3);
+               $st = getData($result3);
+               $k = 0;
+               while ($st[$k]) {
+                    $st[$k]['id'] = $st[$k]['GEO_UNIT'];
+                    $st[$k]['name'] = $st[$k]['GEO_UNIT'];
+                    $st[$k]['text'] = $st[$k]['GEO_UNIT'];
+                    $st[$k]['checked'] = false;
+                    $st[$k]['leaf'] = true;
+                    $k++;
+               }
+               $dt[$j]['children'] = $st;
+               $j++;
+          }
+          $data[$i]['children'] = $dt;
+          $i++;
+     }
+     $k = 0;
+     $data[$k]['expanded'] = true;
+     $data[$k]['children'][$k]['expanded'] = true;
+     returnData($data);
+} else
+
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'REGION_LOAD_TREE') {
+     $sql1 = "SELECT DISTINCT MREG
+              FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
+              ORDER BY MREG";
+     $result1 = odbc_exec($conn, $sql1);
+     $data = getData($result1);
+     $i = 0;
+     while ($data[$i]) {
+          $data[$i]['id'] = $data[$i]['MREG'];
+          $data[$i]['name'] = $data[$i]['MREG'];
+          $data[$i]['text'] = $data[$i]['MREG'];
+          $data[$i]['checked'] = false;
+          $data[$i]['leaf'] = false;
+          $normStr = iconv('utf-8', 'cp1251', $data[$i]['MREG']);
+          $sql2 = "SELECT DISTINCT REG
+                   FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
+                   WHERE MREG = '$normStr'
+                   ORDER BY REG";
+          $result2 = odbc_exec($conn, $sql2);
+          $dt = getData($result2);
+          $j = 0;
+          while ($dt[$j]) {
+               $dt[$j]['id'] = $dt[$j]['REG'];
+               $dt[$j]['name'] = $dt[$j]['REG'];
+               $dt[$j]['text'] = $dt[$j]['REG'];
                $dt[$j]['checked'] = false;
                $dt[$j]['leaf'] = true;
                $j++;
           }
           $data[$i]['children'] = $dt;
-          $data[$i]['checked'] = true;
           $i++;
      }
      returnData($data);
 } else
 
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'SEND_GROUP_TREE')) {
-     $sql = "exec FIKSSI_MAIN @TYPE = '{$_REQUEST['type']}'";
-     $result = odbc_exec($conn, $sql);
-     $data = getData($result);
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'BTS_CELL_LOAD_TREE') {
+     $sql1 = "SELECT DISTINCT MREG
+     FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
+     ORDER BY MREG";
+     $result1 = odbc_exec($conn, $sql1);
+     $data = getData($result1);
      $i = 0;
      while ($data[$i]) {
-          $sql = "exec FIKSSI_MAIN @TYPE = 'SEND_USER_TREE', @ID_GROUP = '{$data[$i]['ID']}'";
-          $result = odbc_exec($conn, $sql);
-          $dt = getData($result);
+          $data[$i]['id'] = $data[$i]['MREG'];
+          $data[$i]['name'] = $data[$i]['MREG'];
+          $data[$i]['text'] = $data[$i]['MREG'];
+          $data[$i]['expandRegion'] = false;
+          $data[$i]['expandBts'] = false;
+          $data[$i]['checked'] = false;
+          $data[$i]['leaf'] = false;
+          $normStrMREG = iconv('utf-8', 'cp1251', $data[$i]['MREG']);
+          $sql2 = "SELECT DISTINCT REG
+                   FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
+                   WHERE MREG = '$normStrMREG'
+                   ORDER BY REG";
+          $result2 = odbc_exec($conn, $sql2);
+          $dt = getData($result2);
           $j = 0;
           while ($dt[$j]) {
-               $dt[$j]['leaf'] = true;
+               $dt[$j]['id'] = $dt[$j]['REG'];
+               $dt[$j]['name'] = $dt[$j]['REG'];
+               $dt[$j]['text'] = $dt[$j]['REG'];
+               $dt[$j]['checked'] = false;
+               $dt[$j]['leaf'] = false;
+               $dt[$j]['expandRegion'] = true;
+               $dt[$j]['expandBts'] = false;
+               $dt[$j]['children']['text'] = 'Идёт загрузка...';
+               $dt[$j]['children']['leaf'] = true;
                $j++;
           }
           $data[$i]['children'] = $dt;
@@ -79,136 +225,49 @@ if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'SEND_GROUP_TREE')) {
      }
      returnData($data);
 } else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'search')) {
-     $OBJ = iconv("utf-8", "windows-1251", filter_input(INPUT_POST, 'obj'));
-//    echo $ID;
-     $sql = "exec FIKSSI_MAIN @TYPE  = 'SEARCH_MR', @SEARCH_OBJ = '{$OBJ}'";
-//    echo $sql;
-     $result = odbc_exec($conn, $sql);
-     $nColumn = odbc_num_fields($result);
-     while ($row = odbc_fetch_row($result)) {
-          for ($i = 1; $i <= $nColumn; $i++) {
-               $res[odbc_field_name($result, $i)] = trim(iconv('cp1251', 'utf-8', odbc_result($result, $i)));
-          };
-          $finalData[] = $res;
+
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'BTS_CELL_LOAD_TREE_ADD_BTS') {
+     $region = iconv('utf-8', 'cp1251', $region);
+     $sql3 = "SELECT DISTINCT BTS_NAME
+               FROM [Stat_Result].[dbo].[T_massEvents_BTS_CELL_Load_List]
+               WHERE REG = '$region'
+               ORDER BY BTS_NAME";
+     $result3 = odbc_exec($conn, $sql3);
+     $bt = getData($result3);
+     $k = 0;
+     while ($bt[$k]) {
+          $bt[$k]['id'] = $bt[$k]['BTS_NAME'];
+          $bt[$k]['name'] = $bt[$k]['BTS_NAME'];
+          $bt[$k]['text'] = $bt[$k]['BTS_NAME'];
+          $bt[$k]['checked'] = false;
+          $bt[$k]['expandRegion'] = false;
+          $bt[$k]['expandBts'] = true;
+          $bt[$k]['leaf'] = false;
+          $bt[$k]['children']['text'] = 'Идёт загрузка...';
+          $bt[$k]['children']['leaf'] = true;
+          $k++;
      }
-     if ($finalData === null) {
-//        echo json_encode('no reply');
-          $err = array();
-          $err['failure'] = true;
-          $err['msg'] = odbc_errormsg();
-          echo json_encode($err);
-     } else {
-          returnData($finalData);
-     }
-} else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'SAVE_ALARMS')) {
-//    print_r($_SERVER);
-     $regions = trim($_REQUEST['REGIONS']);
-     $TV_DAY_PERS = $_REQUEST['TV_DAY_PERS'];
-     $CPD_DAY_PERS = $_REQUEST['CPD_DAY_PERS'];
-     $TLF_DAY_PERS = $_REQUEST['TLF_DAY_PERS'];
-     $TV_NIGHT_PERS = $_REQUEST['TV_NIGHT_PERS'];
-     $CPD_NIGHT_PERS = $_REQUEST['CPD_NIGHT_PERS'];
-     $TLF_NIGHT_PERS = $_REQUEST['TLF_NIGHT_PERS'];
-     $sql = "UPDATE FIKSSI_REGION_ALARMS"
-              . " SET TV_NIGHT_PERS = '{$TV_NIGHT_PERS}', CPD_NIGHT_PERS = '{$CPD_NIGHT_PERS}', TLF_NIGHT_PERS = '{$TLF_NIGHT_PERS}',"
-              . " TV_DAY_PERS = '{$TV_DAY_PERS}', CPD_DAY_PERS = '{$CPD_DAY_PERS}', TLF_DAY_PERS = '{$TLF_DAY_PERS}'"
-              . " WHERE STAT_KOD_REG IN ({$regions})";
-//     print $sql;
-     odbc_exec($conn, $sql);
-     $result = odbc_exec($conn, $sql);
-     addSendLog($conn, 'change_region_alarms', $regions);
-     echo str_replace("null", "\"\"", json_encode(array(
-         'success' => true,
-         'msg' => 'Данные успешно изменены!'
-     )));
-} else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'SAVE_USERS')) {
-//    print_r($_SERVER);
-//     $regions = trim($_REQUEST['REGIONS']);
-     $FIO = iconv("utf-8", "windows-1251", $_REQUEST['FIO']);
-     $ID = $_REQUEST['ID'];
-     $ID_GROUP = $_REQUEST['ID_GROUP'];
-     $COUNT_SEL = $_REQUEST['COUNT_SEL'];
-     $SEND_FLAG = $_REQUEST['SEND_FLAG'];
-     $NAME = $_REQUEST['Name'];
-     if ($COUNT_SEL > 0) {
-          $sql = "UPDATE FIKSSI_SEND_USERS"
-                   . " SET FIO = '{$FIO}', ID_GROUP = '{$ID_GROUP}', SEND_FLAG = '{$SEND_FLAG}',[USER] = '{$NAME}'"
-                   . " WHERE ID IN ({$ID})";
-          $action = 'update_user';
-     } else {
-          $sql = "INSERT INTO FIKSSI_SEND_USERS"
-                   . " SELECT '{$NAME}', '{$ID_GROUP}', '{$SEND_FLAG}', '{$FIO}'";
-          $action = 'add_user';
-     }
-//     print $sql;
-     odbc_exec($conn, $sql);
-     addSendLog($conn, $action, $NAME);
-     echo str_replace("null", "\"\"", json_encode(array(
-         'success' => true,
-         'msg' => 'Данные успешно изменены!'
-     )));
-} else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'REMOVE_USER')) {
-//    print_r($_SERVER);
-//     $regions = trim($_REQUEST['REGIONS']);
-     $FIO = iconv("utf-8", "windows-1251", $_REQUEST['FIO']);
-     $ID_GROUP = $_REQUEST['ID_GROUP'];
-     $COUNT_SEL = $_REQUEST['COUNT_SEL'];
-     $SEND_FLAG = $_REQUEST['SEND_FLAG'];
-     $NAME = $_REQUEST['Name'];
-     $ID = $_REQUEST['ID'];
-
-     $sql = "DELETE FROM FIKSSI_SEND_USERS"
-              . " WHERE ID IN ({$ID})";
-//     print $sql;
-     odbc_exec($conn, $sql);
-     $result = odbc_exec($conn, $sql);
-
-     addSendLog($conn, 'remove_user', $NAME);
-
-     echo str_replace("null", "\"\"", json_encode(array(
-         'success' => true,
-         'msg' => 'Данные успешно изменены!'
-     )));
-} else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'GET_GROUPS')) {
-
-     $sql = "SELECT ID, NAME FROM   FIKSSI_SEND_GROUP";
-//     echo $sql;
-     $result = odbc_exec($conn, $sql);
-     $data = getData($result);
+     $data = $bt;
      returnData($data);
 } else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'INC_DRILLDOWN')) {
 
-     $regType = $_REQUEST['regType'];
-     $time = $_REQUEST['time'];
-     $aggr = $_REQUEST['aggr'];
-     $regId = $_REQUEST['regId'];
-     $downtime = $_REQUEST['downtime'];
-
-     $sql = "exec [availReg].[MAIN] @TYPE  = '{$_REQUEST['type']}', @DATE = '{$time}', @AGGR = '{$aggr}', @REGION_ID = '{$regId}', @DOWNTIME = '{$downtime}'";
-//     echo $sql;
-     $result = odbc_exec($conn, $sql);
-     $data = getData($result);
-     returnData($data);
-} else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'SMILE_TABLE')) {
-     
-     $sql = "exec [availReg].[MAIN] @TYPE  = '{$_REQUEST['type']}', @WEEK='{$week}',@YEAR='{$year}'";
-//     echo $sql;
-     $result = odbc_exec($conn, $sql);
-     $data = getData($result);
-     returnData($data);
-}else
-if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'SMILE_WEEK_COMBO')) {
-
-     $sql = "exec [availReg].[MAIN] @TYPE  = '{$_REQUEST['type']}'";
-//     echo $sql;
-     $result = odbc_exec($conn, $sql);
-     $data = getData($result);
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'BTS_CELL_LOAD_TREE_ADD_CELL') {
+     $bts = iconv('utf-8', 'cp1251', $bts);
+     $sql4 = "SELECT DISTINCT CELLNAME
+               FROM [Stat_Result].[dbo].[T_massEvents_BTS_CELL_Load_List]
+               WHERE BTS_NAME = '$bts'
+               ORDER BY CELLNAME";
+     $result4 = odbc_exec($conn, $sql4);
+     $ct = getData($result4);
+     $m = 0;
+     while ($ct[$m]) {
+          $ct[$m]['id'] = $bts . $ct[$m]['CELLNAME'];
+          $ct[$m]['name'] = $ct[$m]['CELLNAME'];
+          $ct[$m]['text'] = $ct[$m]['CELLNAME'];
+          $ct[$m]['checked'] = false;
+          $ct[$m]['leaf'] = true;
+          $m++;
+     }
+     $data = $ct;
      returnData($data);
 }

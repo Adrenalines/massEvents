@@ -4,16 +4,26 @@
  *
  * TODO - Replace this content of this view to suite the needs of your application.
  */
-Ext.define('MassEvents.view.main.MainController', {
-    extend: 'Ext.app.ViewController',
+Ext.define("MassEvents.view.main.MainController", {
+  extend: "Ext.app.ViewController",
 
-    alias: 'controller.main',
+  alias: "controller.main",
 
-    onRenderMain: function(panel) {
-        var but = Ext.ComponentQuery.query('button[reference=DisplayDataButton]')[0];
-        //          console.log(but);
-        setTimeout(function() {
-            but.fireEvent('click', but);
-        }, 1000);
-    }
+  onRenderMain: function(panel) {
+    /*  Ext.Ajax.request({
+              url: './data/load.php',
+              method: 'POST',
+              timeout: 240000,
+              params: {
+                  table_name: 'loadStore',
+                  kpiType: '2g',
+                  obj: "'SLA_OBJECT[77]:MSK_FWCR_C3'",
+                  kpis: ['TCH_Traffic']
+              },
+              success: function(resp, opts) {
+                  console.log(resp);
+              }
+
+          });*/
+  }
 });

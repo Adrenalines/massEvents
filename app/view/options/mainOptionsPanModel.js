@@ -9,21 +9,14 @@ Ext.define('MassEvents.view.options.mainOptionsPanModel', {
         },
         elRender: {
             title: 'Отображение элементов',
-            labelHints: 'Хинты',
-            shared: 'Объединить',
-            noshared: 'Разделить',
-            disabled: 'Убрать',
+            titles: 'Заголовки',
             legend: 'Легенды',
-            xAxisLabelsShowed: 'Подписи по оси X',
-            target: 'Добавить целевые значения',
-            onlyTarget: 'Только целевые значения'
+            xAxisLabelsShowed: 'Подписи по оси X'
         },
         renderer: {
             title: 'Визуализация',
             chart: 'В виде графиков',
-            table: 'В виде таблиц',
-            newTab: 'В новой вкладке',
-            currentTab: 'В текущей вкладке'
+            table: 'В виде таблиц'
         },
         help: {
             title: 'Справка'

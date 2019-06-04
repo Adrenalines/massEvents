@@ -1,34 +1,26 @@
 <?php
 
-//require_once 'checkaccess.php';
-//checkaccess();
 require_once 'functions.php';
-
-//function connect() {
-//     $conn = odbc_connect("DSN=" . DSN . ";UID=" . BD_USER . ";PWD=" . BD_PASS . "", "", "");
-//     return $conn;
-//}
 
 $conn = connect();
 
 if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'main')) {
-    if ($_REQUEST['test']=='second_chart'){
+     $regList = stripslashes($regList);
+     if ($regList == "") {
+          $regList = "''";
+     }
+    if ($_REQUEST['test']=='2G Traffic, CSSR, Availability') {
+     
 
-
-         $i = 2;
-         $sql = "SELECT CONVERT(NVARCHAR(50),start_time,104) AS DATE
-         , CONVERT(INT,hrs) AS DATA1
-         , CONVERT(INT,INPUT_BYTES_DISPLAY) AS DATA0
-    FROM OPENQUERY (extpm,'SELECT /*+ parallel(8) */ trunc(a.stime) start_time
-                                  , round(MAX(a.TCH_TRAFFIC_1D_AGG),2) hrs
-                                  , round(MAX(a.SDCCH_TRAFFIC_1D_AGG),2) INPUT_BYTES_DISPLAY
-                             FROM mts_if.dc_managed_object bs
-                             LEFT JOIN mts_datacollector.BSS_2G_G3_L1_D a ON a.mo_id = bs.id
-where bs.external_key IN (''SLA_OBJECT[78]:SPB_ARENA_FWCR_C2'')  
-and a.stime BETWEEN to_date(''$startDate'') and to_date(''$endDate'')
-GROUP BY bs.external_key, a.stime ORDER BY bs.external_key, a.stime
-   ')";
-         //echo $sql;
+         $i = 4;
+         $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+         TCH_Traffic AS DATA0, SDCCH_Traffic AS DATA1, CSSR AS DATA2,
+         BSS_Availability_Rate AS DATA3
+    FROM [dbo].T_massEvents_Result_2G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+      //  echo $sql;
          $result = odbc_exec($conn, $sql);
          $data = getData($result);
     //     print_r($data);
@@ -60,340 +52,432 @@ GROUP BY bs.external_key, a.stime ORDER BY bs.external_key, a.stime
          ));
 
 
-    } else if ($_REQUEST['test']=='third_chart'){
-
-      /*
-        $sql = "exec [perfmonExtPM].[MAIN] @TYPE = 'CHART'"
-                    . ", @KPI_FIELD='{$regList}', @START_DATE = '{$startDate}', @END_DATE = '{$endDate}', @TIME_AGGR = '{$aggregation}'"
-                    . ", @SRV_LIST = '{$list}',@SRV_TYPE = '{$srvType}', @SRV_LIST_H = '{$listHead}', @COUNT_REG ='{$countReg}'";
-      */
-
-        $startDate = $_REQUEST['startDate'];
-        $newtimestamp = strtotime('+86399 seconds', strtotime($_REQUEST['endDate'])); // Добавляем к конечной дате 23:59:59
-        $endDate = date('Y-m-d H:i:s', $newtimestamp);
-
-
-
-        $tableName = 'v$rman_backup_job_details';
-        $i = 2;
-        //$sql = "EXEC [dbo].[PEFR_DB_EXT_MAIN] @INPUT_TYPE = 'DB FULL'";
-        $sql = "SELECT CONVERT(NVARCHAR(50),start_time,104) AS DATE
-                     , hrs AS DATA1
-                     , INPUT_BYTES_DISPLAY AS DATA0
-                FROM OPENQUERY ([ext_pm],'SELECT /*+ parallel(8) */ trunc(a.stime) start_time
-                                              , round(MAX(a.TCH_TRAFFIC_1D_AGG),2) hrs
-                                              , round(MAX(a.SDCCH_TRAFFIC_1D_AGG),2) INPUT_BYTES_DISPLAY
-                                         FROM mts_if.dc_managed_object bs
-                                         LEFT JOIN mts_datacollector.BSS_2G_G3_L1_D a ON a.mo_id = bs.id
-          where bs.external_key IN (''SLA_OBJECT[78]:SPB_ARENA_FWCR_C2'')  
-          and a.stime BETWEEN to_date(''$startDate'',''YYYY-MM-DD HH24:MI:SS'') and to_date(''$endDate'',''YYYY-MM-DD HH24:MI:SS'')
-          GROUP BY bs.external_key, a.stime ORDER BY bs.external_key, a.stime
-               ')";
-
-        //echo $sql;        
-
-        $result = odbc_exec($conn, $sql);
-         $data = getData($result);
-    //     print_r($data);
-         $j = 0;
-         $points = array();
-         $dates = array();
-
-         while ($data[$j]) {
-              for ($k = 0; $k < $i; $k++) {
-                   if ($j == 0) {
-                        $points[$k] = array();
-                   }
-                   array_push($points[$k], $data[$j]['DATA' . $k]);
-              }
-
-              //array_push($dates, $data[$j]['DATE']);
-              array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
-
-              $j++;
-         }
-         $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
-         $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
-         echo json_encode(array(
-             'point_start' => $start_date,
-             'point_end' => $end_date,
-             'points' => $points,
-             'dates' => $dates,
-             'data' => $data
-         ));
-
-
-
-
-
-
-         /*$i = 2;
-         $sql = "EXEC dbo.PEFR_DB_EXT_MAIN @INPUT_TYPE = 'DB FULL'";
-         //echo $sql;
-         $result = odbc_exec($conn, $sql);
-         $data = getData($result);
-    //     print_r($data);
-         $j = 0;
-         $points = array();
-         $dates = array();
-         while ($data[$j]) {
-              for ($k = 0; $k < $i; $k++) {
-                   if ($j == 0) {
-                        $points[$k] = array();
-                   }
-                   array_push($points[$k], $data[$j]['DATA' . $k]);
-              }
-              //array_push($dates, $data[$j]['DATE']);
-              //array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
-              //array_push($dates, (strtotime($data[$j]['DATE']) + 3 * 60 * 60)*1000);
-
-
-              $datetime1 = date('Y, n, j', strtotime($data[$j]['DATE']. ' - 1 month') + 3 * 60 * 60); //converts date from 2012-01-10 (mysql date format) to the format Highcharts understands 2012, 1, 10
-              //$datetime2 = 'Date.UTC('.$datetime1.'), '.$data[$j]['DATA0']; //getting the date into the required format for pushing the Data into the Series
-              $datetime2 = 'Date.UTC('.$datetime1.')';
-              array_push($dates, $datetime2);
-
-
-              //array_push($dates, "Date.UTC(1970, 10, 25)");
-              //array_push($dates, gmdate('Y-m-d H:i:s', strtotime($data[$j]['DATE'])+ 3 * 60 * 60));
-
-              $j++;
-         }
-         $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
-         $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
-         echo json_encode(array(
-             'point_start' => $start_date,
-             'point_end' => $end_date,
-             'points' => $points,
-             'dates' => $dates,
-             'data' => $data
-         ));*/
-
-    } else if ($_REQUEST['test'] == 'fifth_chart'){
-
-         $i = 3;
-         $sql = "SELECT STIME as DATE
-                      , CONVERT(INT,ORADATA) as DATA0
-                      , CONVERT(INT,ORADATASSD) as DATA1
-                      , CONVERT(INT,ORADATAFAST) as DATA2
-                 FROM (
-                      SELECT *
-                      FROM (SELECT STIME,NAME,used_PRC  FROM VM_ASM_DISKGROUP) SourceTable
-                      UNPIVOT(a FOR Properties  in (used_PRC))as UnpivotResultTable) UnpivotTable
-                PIVOT (
-                    MAX(a) FOR NAME in ([ORADATA],[ORADATASSD],[ORADATAFAST])) PivotTable order by STIME ASC";
-         //echo $sql;
-         $result = odbc_exec($conn, $sql);
-         $data = getData($result);
-    //     print_r($data);
-         $j = 0;
-         $points = array();
-         $dates = array();
-
-         while ($data[$j]) {
-              for ($k = 0; $k < $i; $k++) {
-                   if ($j == 0) {
-                        $points[$k] = array();
-                   }
-                   array_push($points[$k], $data[$j]['DATA' . $k]);
-              }
-              array_push($dates, $data[$j]['DATE']);
-              $j++;
-         }
-         $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
-         $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
-         echo json_encode(array(
-             'point_start' => $start_date,
-             'point_end'   => $end_date,
-             'points'      => $points,
-             'dates'       => $dates,
-             'data'        => $data
-         ));
-
-
-
-
-    } else if ($_REQUEST['test'] == 'six_chart'){
-
-        $startDate = $_REQUEST['startDate'];
-        $endDate = $_REQUEST['endDate'];
-
-         $i = 2;
-         $sql = "SELECT STIME as DATE
-                      , CONVERT(INT,SIZE_TB) as DATA0
-                      , CONVERT(INT,USEDSIZE_TB) as DATA1
-               FROM OPENQUERY ([EXTPM], 'SELECT STIME
-                                              , SIZE_TB
-                                              , USEDSIZE_TB
-                                         FROM MTS_NIOSS.V_DB_SIZE
-                                         WHERE STIME BETWEEN ''$startDate'' and ''$endDate''
-                  ')";
-         //echo $sql;
-         $result = odbc_exec($conn, $sql);
-         $data = getData($result);
-         //print_r($data);
-         $j = 0;
-         $points = array();
-         $dates = array();
-
-         while ($data[$j]) {
-              for ($k = 0; $k < $i; $k++) {
-                   if ($j == 0) {
-                        $points[$k] = array();
-                   }
-                   array_push($points[$k], $data[$j]['DATA' . $k]);
-              }
-              array_push($dates, $data[$j]['DATE']);
-              $j++;
-         }
-         $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
-         $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
-         echo json_encode(array(
-             'point_start' => $start_date,
-             'point_end'   => $end_date,
-             'points'      => $points,
-             'dates'       => $dates,
-             'data'        => $data
-         ));
-
-
-
-
-    } else if ($_REQUEST['test'] == 'fourth_chart'){
-
-         $i = 2;
-         $sql = "EXEC dbo.PEFR_DB_EXT_MAIN @INPUT_PARAMETR = 'SECOND_PART'";
-         //echo $sql;
-         $result = odbc_exec($conn, $sql);
-         $data = getData($result);
-    //     print_r($data);
-         $j = 0;
-         $points = array();
-         $dates = array();
-         while ($data[$j]) {
-              for ($k = 0; $k < $i; $k++) {
-                   if ($j == 0) {
-                        $points[$k] = array();
-                   }
-                   array_push($points[$k], $data[$j]['DATA' . $k]);
-              }
-              array_push($dates, $data[$j]['DATE']);
-              $j++;
-         }
-         $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
-         $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
-         echo json_encode(array(
-             'point_start' => $start_date,
-             'point_end' => $end_date,
-             'points' => $points,
-             'dates' => $dates,
-             'data' => $data
-
-         ));
-
-    } else {
-
-           $startDate = $_REQUEST['startDate'];
-           $endDate = $_REQUEST['endDate'];
-           $aggregation = $_REQUEST['aggregation'];
-           $srvData = split(',', $_REQUEST['srv']);
-           $srvType = $_REQUEST['srvType'];
-           $countReg = $_REQUEST['countReg'];
-           $regList =  $_REQUEST['regList'];
-           $i = 0;
-           while ($srvData[$i]) {
-                if ($list == '') {
-                     $list = $list . '[' . $srvData[$i] . ']';
-                } else {
-                     $list = $list . ',[' . $srvData[$i] . ']';
-                }
-                if ($listHead == '') {
-                     $listHead = $listHead . 'ISNULL([' . $srvData[$i] . '],-1) as DATA' . $i;
-                } else {
-                     $listHead = $listHead . ',ISNULL([' . $srvData[$i] . '],-1) as DATA' . $i;
-                }
-                $i++;
-           }
-           $sql = "exec [perfmonExtPM].[MAIN] @TYPE = 'CHART'"
-                    . ", @KPI_FIELD='{$regList}', @START_DATE = '{$startDate}', @END_DATE = '{$endDate}', @TIME_AGGR = '{$aggregation}'"
-                    . ", @SRV_LIST = '{$list}',@SRV_TYPE = '{$srvType}', @SRV_LIST_H = '{$listHead}', @COUNT_REG ='{$countReg}'";
-      //     echo $sql;
-           $result = odbc_exec($conn, $sql);
-           $data = getData($result);
-
-           $j = 0;
-           $start_date = $data[0]['DATE_SS'];
-           $points = array();
-           $dates = array();
-           while ($data[$j]) {
-                for ($k = 0; $k < $i; $k++) {
-                     if ($j == 0) {
-                          $points[$k] = array();
-                     }
-      //               $points[$j].push($data[$j]['DATA'.$k]);
-                     array_push($points[$k], $data[$j]['DATA' . $k]);
-                }
-                array_push($dates, $data[$j]['DATE']);
-                $j++;
-           }
-           $end_date = $data[$j - 1]['DATE_SS'];
-           echo json_encode(array(
-               'point_start' => $start_date,
-               'point_end' => $end_date,
-               'points' => $points,
-               'dates' => $dates,
-               'data' => $data
-           ));
-
-    }
-
-
-
-
-} else if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'target')) {
-
-     $startDate = $_REQUEST['startDate'];
-     $endDate = $_REQUEST['endDate'];
-     $aggregation = $_REQUEST['aggregation'];
-     $srvData = $_REQUEST['srv'];
-     $countReg = $_REQUEST['countReg'];
-     $regList = $_REQUEST['regList'];
-     $i = 2; // два целевых значения и один регион
-     $sql = "exec [availReg].[MAIN] @TYPE = 'TARGET_CHART'"
-              . ", @KPI_FIELD='{$srvData}', @START_DATE = '{$startDate}', @END_DATE = '{$endDate}', @TIME_AGGR = '{$aggregation}', @REG_LIST = '{$regList}'";
-//     echo $sql;
+    } else if ($_REQUEST['test']=='2G DCR, BCR') {
+     $i = 3;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     Drop_Call_Rate AS DATA0, SDCCH_Blocking_Rate AS DATA1,
+     TCH_Serv_Blocking_Rate AS DATA2
+FROM [dbo].T_massEvents_Result_2G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
      $result = odbc_exec($conn, $sql);
      $data = getData($result);
-
+//     print_r($data);
      $j = 0;
-     //$min=-1000;
-     $start_date = $data[0]['DATE_SS'];
      $points = array();
      $dates = array();
+
      while ($data[$j]) {
-          for ($k = 0; $k <= $i; $k++) {
+          for ($k = 0; $k < $i; $k++) {
                if ($j == 0) {
                     $points[$k] = array();
-                    $min = $data[$j]['DATA' . $k];
                }
                array_push($points[$k], $data[$j]['DATA' . $k]);
-               if ($min > $data[$j]['DATA' . $k]) {
-                    $min = $data[$j]['DATA' . $k];
-               }
           }
-          array_push($dates, $data[$j]['DATE']);
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
           $j++;
      }
-     $end_date = $data[$j - 1]['DATE_SS'];
-
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
      echo json_encode(array(
          'point_start' => $start_date,
          'point_end' => $end_date,
          'points' => $points,
          'dates' => $dates,
-         'data' => $data,
-         'min' => $min
+         'data' => $data
      ));
+    } else if ($_REQUEST['test']=='2G Cells, Calls') {
+     $i = 2;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     CELL_Count_2G AS DATA0, Calls_Count_2G AS DATA1
+FROM [dbo].T_massEvents_Result_2G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='3G SP') {
+     $i = 5;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     Traff_Sp AS DATA0, Drop_Sp AS DATA1, CSSR_Sp AS DATA2,
+Block_Sp AS DATA3, RAN_Availability AS DATA4
+FROM [dbo].T_massEvents_Result_3G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='3G Data') {
+     $i = 3;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     Drop_Data AS DATA0, CSSR_Data AS DATA1, Block_Data AS DATA2
+FROM [dbo].T_massEvents_Result_3G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='3G Cells, Calls') {
+     $i = 2;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     CELL_Count_3G AS DATA0, Calls_Count_3G AS DATA1
+FROM [dbo].T_massEvents_Result_3G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='3G Data Traffic, THR') {
+     $i = 5;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     Traff_Data_3G AS DATA0, Traff_Data_DL_3G AS DATA1, Traff_Data_UL_3G AS DATA2,
+     HSDPA_USER_DC_THR AS DATA3, HSUPA_USER_THR AS DATA4
+FROM [dbo].T_massEvents_Result_3G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='4G DPH_UE, CSSR_LTE') {
+     $i = 3;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     DpH_UE AS DATA0, CSSR_LTE AS DATA1, LTE_RAN_Avail AS DATA2
+FROM [dbo].T_massEvents_Result_4G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='4G Traffic, Thr, User_Max') {
+     $i = 7;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     Traff_Data_4G AS DATA0, Traff_Data_DL_4G AS DATA1, Traff_Data_UL_4G AS DATA2,
+     UE_Throughput_DL AS DATA3, UE_Throughput_UL AS DATA4, LTE_User_Max AS DATA5, CELL_Count_4G AS DATA6
+FROM [dbo].T_massEvents_Result_4G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='4G VoLTE') {
+     $i = 3;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     Traff_VoLTE AS DATA0, DpH_VoLTE_UE AS DATA1, CSSR_VoLTE AS DATA2
+FROM [dbo].T_massEvents_Result_4G_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='4G Sharing') {
+     $i = 3;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     E_RAB_Retainability_Sharing AS DATA0, InitialEPSBEstabSR_Sharing AS DATA1,
+     CellAvailability_Sharing AS DATA2
+FROM [dbo].T_massEvents_Result_4G_Sharing_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    } else if ($_REQUEST['test']=='4G Sharing Traffic, Thp') {
+     $i = 5;
+     $sql = "SELECT CONVERT(NVARCHAR(50),STime,120) AS DATE,
+     Traff_Sharing AS DATA0, Traff_DL_Sharing AS DATA1, Traff_UL_Sharing AS DATA2,
+     Downlink_Thp_Sharing AS DATA3, Uplink_Thp_Sharing AS DATA4
+FROM [dbo].T_massEvents_Result_4G_Sharing_SLA
+where Managed_Object IN ($regList)
+and STime BETWEEN '$startDate' and '$endDate'
+ORDER BY STime";
+  //  echo $sql;
+     $result = odbc_exec($conn, $sql);
+     $data = getData($result);
+//     print_r($data);
+     $j = 0;
+     $points = array();
+     $dates = array();
+
+     while ($data[$j]) {
+          for ($k = 0; $k < $i; $k++) {
+               if ($j == 0) {
+                    $points[$k] = array();
+               }
+               array_push($points[$k], $data[$j]['DATA' . $k]);
+          }
+
+          //array_push($dates, $data[$j]['DATE']);
+          array_push($dates, date('Y-m-d H:i:s.u', strtotime($data[$j]['DATE'])));
+
+          $j++;
+     }
+     $start_date = strtotime($data[0]['DATE']) + 3 * 60 * 60;
+     $end_date = strtotime($data[$j - 1]['DATE']) + 3 * 60 * 60;
+     echo json_encode(array(
+         'point_start' => $start_date,
+         'point_end' => $end_date,
+         'points' => $points,
+         'dates' => $dates,
+         'data' => $data
+     ));
+    }
+/*
 } else if ((isset($_REQUEST['type']) && $_REQUEST['type'] == 'grid')) {
 
      $startDate = $_REQUEST['startDate'];
@@ -410,5 +494,5 @@ GROUP BY bs.external_key, a.stime ORDER BY bs.external_key, a.stime
 
      echo json_encode(array(
          'data' => $data
-     ));
-}
+     ));*/
+} 

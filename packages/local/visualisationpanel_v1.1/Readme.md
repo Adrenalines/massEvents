@@ -1,2 +1,0 @@
-# visualisationpanel - Read Me
-

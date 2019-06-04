@@ -1,0 +1,486 @@
+{
+    "expanded": true,
+    "children": [{
+            "id": "2G",
+            "text": "2G",
+            "leaf": false,
+            "checked": false,
+            "expanded": false,
+            "children": [{
+                    "id": "TCH_Traffic",
+                    "text": "Трафик на каналах TCH, Эрл",
+                    "tableHourly": "BSS_2G_G3_L1_H",
+                    "columnHourly": "TCH_TRAFFIC_1H_AGG",
+                    "tableDaily": "BSS_2G_G3_L1_D",
+                    "columnDaily": "TCH_TRAFFIC_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "SDCCH_Traffic",
+                    "text": "Трафик на каналах SDCCH, Эрл",
+                    "tableHourly": "BSS_2G_G3_L1_H",
+                    "columnHourly": "SDCCH_TRAFFIC_1H_AGG",
+                    "tableDaily": "BSS_2G_G3_L1_D",
+                    "columnDaily": "SDCCH_TRAFFIC_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CSSR",
+                    "text": "Процент успешно установленных соединений на радиоподсистеме (CSSR)",
+                    "tableHourly": "BSS_2G_G1_L2_H",
+                    "columnHourly": "CSSR_1H_AGG",
+                    "tableDaily": "BSS_2G_G1_L2_D",
+                    "columnDaily": "CSSR_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "BSS_Availability_Rate",
+                    "text": "BSS_Availability_Rate",
+                    "tableHourly": "BSS_2G_G5_L2_H",
+                    "columnHourly": "BSS_AVAILA_ATE_1H_AGG_2",
+                    "tableDaily": "BSS_2G_G5_L2_D",
+                    "columnDaily": "BSS_AVAILA_ATE_1D_AGG_2",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Drop_Call_Rate",
+                    "text": "Процент обрывов соединений (DCR)",
+                    "tableHourly": "BSS_2G_G2_L2_H",
+                    "columnHourly": "DROP_CALL_ATE_1H_AGG",
+                    "tableDaily": "BSS_2G_G2_L2_D",
+                    "columnDaily": "DROP_CALL_ATE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "SDCCH_Blocking_Rate",
+                    "text": "Процент блокировок на SDCCH",
+                    "tableHourly": "BSS_2G_G1_L2_H",
+                    "columnHourly": "SDCCH_BLOC_ATE_1H_AGG",
+                    "tableDaily": "BSS_2G_G1_L2_D",
+                    "columnDaily": "SDCCH_BLOC_ATE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "TCH_Serv_Blocking_Rate",
+                    "text": "Процент блокировок на разговорных каналах (BCR_серв.)",
+                    "tableHourly": "BSS_2G_G1_L2_H",
+                    "columnHourly": "TCH_SERV_B_ATE_1H_AGG",
+                    "tableDaily": "BSS_2G_G1_L2_D",
+                    "columnDaily": "TCH_SERV_B_ATE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CELL_Count_2G",
+                    "text": "CELL_Count_2G",
+                    "tableHourly": "CELL_COUNT_2G_L1_H",
+                    "columnHourly": "CELL_COUNT_1H_AGG",
+                    "tableDaily": "CELL_COUNT_2G_L2_D",
+                    "columnDaily": "CELL_COUNT_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Calls_Count_2G",
+                    "text": "Calls_Count_2G",
+                    "tableHourly": "BSS_2G_G2_L2_H",
+                    "columnHourly": "CALLS_1H_AGG",
+                    "tableDaily": "BSS_2G_G2_L2_D",
+                    "columnDaily": "CALLS_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                }
+            ]
+        },
+        {
+            "id": "3G",
+            "text": "3G",
+            "leaf": false,
+            "checked": false,
+            "expanded": false,
+            "children": [{
+                    "id": "Traff_Sp",
+                    "text": "Traff_Sp, Erl",
+                    "tableHourly": "BSS_3G_G6_L1_TRAFF_AVG_H",
+                    "columnHourly": "TRAFF_SP_AVG_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L1_TRAFF_AVG_D",
+                    "columnDaily": "TRAFF_SP_AVG_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Drop_Sp",
+                    "text": "Drop_Sp",
+                    "tableHourly": "BSS_3G_G2_L2_H",
+                    "columnHourly": "DROP_SP_RATE_1H_AGG",
+                    "tableDaily": "BSS_3G_G2_L2_D",
+                    "columnDaily": "DROP_SP_RATE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CSSR_Sp",
+                    "text": "CSSR_Sp",
+                    "tableHourly": "BSS_3G_G1_L2_H",
+                    "columnHourly": "CSSR_CS_1H_AGG",
+                    "tableDaily": "BSS_3G_G1_L2_D",
+                    "columnDaily": "CSSR_CS_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Block_Sp",
+                    "text": "Block_Sp",
+                    "tableHourly": "BSS_3G_G6_L25_H",
+                    "columnHourly": "BLOCK_SP_RATE_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L25_D",
+                    "columnDaily": "BLOCK_SP_RATE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "RAN_Availability",
+                    "text": "RAN_Availability",
+                    "tableHourly": "BSS_3G_G5_L2_H",
+                    "columnHourly": "RAN_AVAILA_ITY_1H_AGG",
+                    "tableDaily": "BSS_3G_G5_L2_D",
+                    "columnDaily": "RAN_AVAILA_ITY_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Drop_Data",
+                    "text": "Drop_Data",
+                    "tableHourly": "BSS_3G_G2_L2_H",
+                    "columnHourly": "DROP_PS_RATE_1H_AGG",
+                    "tableDaily": "BSS_3G_G2_L2_D",
+                    "columnDaily": "DROP_PS_RATE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CSSR_Data",
+                    "text": "CSSR_Data",
+                    "tableHourly": "BSS_3G_G1_L2_H",
+                    "columnHourly": "CSSR_PS_1H_AGG",
+                    "tableDaily": "BSS_3G_G1_L2_D",
+                    "columnDaily": "CSSR_PS_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Block_Data",
+                    "text": "Block_Data",
+                    "tableHourly": "BSS_3G_G6_L25_H",
+                    "columnHourly": "BLOCK_PS_RATE_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L25_D",
+                    "columnDaily": "BLOCK_PS_RATE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CELL_Count_3G",
+                    "text": "CELL_Count_3G",
+                    "tableHourly": "BSS_3G_G6_L1_TRAFF_INT_H",
+                    "columnHourly": "CELL_COUNT_1H_AGG_2",
+                    "tableDaily": "BSS_3G_G6_L2_D",
+                    "columnDaily": "CELL_COUNT_1D_MAX_3",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Calls_Count_3G",
+                    "text": "Calls_Count_3G",
+                    "tableHourly": "BSS_3G_G2_L1_H",
+                    "columnHourly": "SP_DROP_DN_1H_AGG",
+                    "tableDaily": "BSS_3G_G2_L1_D",
+                    "columnDaily": "SP_DROP_DN_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_Data_3G",
+                    "text": "Traff_Data_3G, KB",
+                    "tableHourly": "BSS_3G_G6_L22_H",
+                    "columnHourly": "TRAFF_PS_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L22_D",
+                    "columnDaily": "TRAFF_PS_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_Data_DL_3G",
+                    "text": "Traff_Data_DL_3G, KB",
+                    "tableHourly": "BSS_3G_G6_L22_H",
+                    "columnHourly": "TRAFF_PS_DL_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L22_D",
+                    "columnDaily": "TRAFF_PS_DL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_Data_UL_3G",
+                    "text": "Traff_Data_UL_3G, KB",
+                    "tableHourly": "BSS_3G_G6_L22_H",
+                    "columnHourly": "TRAFF_PS_UL_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L22_D",
+                    "columnDaily": "TRAFF_PS_UL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "HSDPA_USER_DC_THR",
+                    "text": "HSDPA_USER_DC_THR, Kbit/s",
+                    "tableHourly": "BSS_3G_G6_L24_H",
+                    "columnHourly": "HSDPA_USER_THR_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L24_D",
+                    "columnDaily": "HSDPA_USER_THR_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "HSUPA_USER_THR",
+                    "text": "HSUPA_USER_THR, Kbit/s",
+                    "tableHourly": "BSS_3G_G6_L24_H",
+                    "columnHourly": "HSUPA_USER_THR_1H_AGG",
+                    "tableDaily": "BSS_3G_G6_L24_D",
+                    "columnDaily": "HSUPA_USER_THR_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                }
+            ]
+        },
+        {
+            "id": "4G",
+            "text": "4G",
+            "leaf": false,
+            "checked": false,
+            "expanded": false,
+            "children": [{
+                    "id": "DpH_UE",
+                    "text": "DpH_UE",
+                    "tableHourly": "BSS_4G_G2_L2_H",
+                    "columnHourly": "DPH_UE_1H_AGG",
+                    "tableDaily": "BSS_4G_G2_L2_D",
+                    "columnDaily": "DPH_UE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CSSR_LTE",
+                    "text": "CSSR_LTE",
+                    "tableHourly": "BSS_4G_G1_L2_H",
+                    "columnHourly": "CSSR_LTE_1H_AGG",
+                    "tableDaily": "BSS_4G_G1_L2_D",
+                    "columnDaily": "CSSR_LTE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "LTE_RAN_Avail",
+                    "text": "LTE_RAN_Avail",
+                    "tableHourly": "BSS_4G_G5_L2_H",
+                    "columnHourly": "LTE_RAN_AVAIL_1H_AGG",
+                    "tableDaily": "BSS_4G_G5_L2_D",
+                    "columnDaily": "LTE_RAN_AVAIL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_Data_4G",
+                    "text": "Traff_Data_4G, KB",
+                    "tableHourly": "BSS_4G_G6_L2_H",
+                    "columnHourly": "TRAFF_DATA_ELL_1H_AGG_2",
+                    "tableDaily": "BSS_4G_G6_L2_D",
+                    "columnDaily": "TRAFF_DATA_ELL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_Data_DL_4G",
+                    "text": "Traff_Data_DL_4G, KB",
+                    "tableHourly": "BSS_4G_G6_L1_H",
+                    "columnHourly": "TRAFF_DL_D_ELL_1H_AGG",
+                    "tableDaily": "BSS_4G_G6_L1_D",
+                    "columnDaily": "TRAFF_DL_D_ELL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_Data_UL_4G",
+                    "text": "Traff_Data_UL_4G, KB",
+                    "tableHourly": "BSS_4G_G6_L1_H",
+                    "columnHourly": "TRAFF_UL_D_ELL_1H_AGG",
+                    "tableDaily": "BSS_4G_G6_L1_D",
+                    "columnDaily": "TRAFF_UL_D_ELL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "UE_Throughput_DL",
+                    "text": "UE_Throughput_DL, Kbit/s",
+                    "tableHourly": "BSS_4G_G6_L2_H",
+                    "columnHourly": "UE_THROUGH_DL_1H_AGG",
+                    "tableDaily": "BSS_4G_G6_L2_D",
+                    "columnDaily": "UE_THROUGH_DL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "UE_Throughput_UL",
+                    "text": "UE_Throughput_UL, Kbit/s",
+                    "tableHourly": "BSS_4G_G6_L2_H",
+                    "columnHourly": "UE_THROUGH_UL_1H_AGG",
+                    "tableDaily": "BSS_4G_G6_L2_D",
+                    "columnDaily": "UE_THROUGH_UL_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "LTE_User_Max",
+                    "text": "LTE_User_Max",
+                    "tableHourly": "BSS_4G_G6_L1_MAX_H",
+                    "columnHourly": "LTE_USER_MAX_1H_MAX",
+                    "tableDaily": "BSS_4G_G6_L1_MAX_D",
+                    "columnDaily": "LTE_USER_MAX_1D_MAX",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CELL_Count_4G",
+                    "text": "CELL_Count_4G",
+                    "tableHourly": "BSS_4G_G6_L1_MAX_H",
+                    "columnHourly": "CELL_COUNT_1H_MAX",
+                    "tableDaily": "BSS_4G_G6_L1_MAX_D",
+                    "columnDaily": "CELL_COUNT_1D_MAX",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_VoLTE",
+                    "text": "Traff_VoLTE",
+                    "tableHourly": "BSS_TRAFF_AVG_VOLTE_G6_L1_H",
+                    "columnHourly": "TRAFF_VOLT_AVG_1H_AGG",
+                    "tableDaily": "BSS_TRAFF_AVG_VOLTE_G6_L2_D",
+                    "columnDaily": "TRAFF_VOLT_AVG_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "DpH_VoLTE_UE",
+                    "text": "DpH_VoLTE_UE",
+                    "tableHourly": "BSS_VOLTE_G2_L2_H",
+                    "columnHourly": "DPH_VOLTE_UE_1H_AGG",
+                    "tableDaily": "BSS_VOLTE_G2_L2_D",
+                    "columnDaily": "DPH_VOLTE_UE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CSSR_VoLTE",
+                    "text": "CSSR_VoLTE",
+                    "tableHourly": "BSS_VOLTE_G1_L2_H",
+                    "columnHourly": "CSSR_VOLTE_1H_AGG",
+                    "tableDaily": "BSS_VOLTE_G1_L2_D",
+                    "columnDaily": "CSSR_VOLTE_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                }
+            ]
+        },
+        {
+            "id": "4G_Sharing",
+            "text": "4G_Sharing",
+            "leaf": false,
+            "checked": false,
+            "expanded": false,
+            "children": [{
+                    "id": "E_RAB_Retainability_Sharing",
+                    "text": "E-RAB Retainability_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L2_CC_H",
+                    "columnHourly": "E_RAB_RETA_ING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L2_CC_D",
+                    "columnDaily": "E_RAB_RETA_ING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "InitialEPSBEstabSR_Sharing",
+                    "text": "InitialEPSBEstabSR_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L3_CC_H",
+                    "columnHourly": "INITIALEPS_ING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L3_CC_D",
+                    "columnDaily": "INITIALEPS_ING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "CellAvailability_Sharing",
+                    "text": "CellAvailability_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L2_CC_H",
+                    "columnHourly": "CELLAVAILA_ING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L2_CC_D",
+                    "columnDaily": "CELLAVAILA_ING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_Sharing",
+                    "text": "Traff_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L2_CC_H",
+                    "columnHourly": "TRAFF_SHARING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L2_CC_D",
+                    "columnDaily": "TRAFF_SHARING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_DL_Sharing",
+                    "text": "Traff_DL_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L1_H",
+                    "columnHourly": "TRAFF_DL_S_ING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L1_D",
+                    "columnDaily": "TRAFF_DL_S_ING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Traff_UL_Sharing",
+                    "text": "Traff_UL_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L1_H",
+                    "columnHourly": "TRAFF_UL_S_ING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L1_D",
+                    "columnDaily": "TRAFF_UL_S_ING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Downlink_Thp_Sharing",
+                    "text": "Downlink Thp_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L2_CC_H",
+                    "columnHourly": "DOWNLINK_T_ING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L2_CC_D",
+                    "columnDaily": "DOWNLINK_T_ING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                },
+                {
+                    "id": "Uplink_Thp_Sharing",
+                    "text": "Uplink Thp_Sharing",
+                    "tableHourly": "BSS_LTE_SHARING_L2_CC_H",
+                    "columnHourly": "UPLINK_THP_ING_1H_AGG",
+                    "tableDaily": "BSS_LTE_SHARING_L2_CC_D",
+                    "columnDaily": "UPLINK_THP_ING_1D_AGG",
+                    "checked": false,
+                    "leaf": true
+                }
+            ]
+        }
+    ]
+}

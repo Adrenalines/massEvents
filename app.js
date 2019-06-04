@@ -9,7 +9,6 @@ Ext.application({
     extend: 'MassEvents.Application',
 
     requires: [
-        'MassEvents.globals.Constants',
         'MassEvents.view.main.Main'
     ],
 
@@ -18,6 +17,7 @@ Ext.application({
     // modern toolkit, the main view will be added to the Viewport.
     //
     mainView: 'MassEvents.view.main.Main'
+
 
     //-------------------------------------------------------------------------
     // Most customizations should be made to MassEvents.Application. If you need to

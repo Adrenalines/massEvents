@@ -1,6 +1,6 @@
 Ext.define('Charts', {
     singleton: true,
-    colors: ['#3333FF', '#666600', '#990033', '#990099', '#FF0000', '#CCCC00', '#FF9999', '#99CCFF', '#FF9900', '#663333', '#336633',
+    colors: ['#009900', '#000099', '#FF3333', '#006699', '#FFCCCC', '#CCCC00', '#00CCCC', '#99CCFF', '#FF9900', '#663333', '#336633',
         '#66FFCC', '#FF6600', '#333333', '#99CCCC', '#CC6600', '#FF00CC', '#333300', '#33CCCC', '#9966CC', '#00FFFF', '#99FFCC', '#336666',
         '#990066', '#666666', '#660066', '#9999CC', '#660066', '#33FF33', '#CC9999', '#660033', '#0099CC', '#CC0066', '#006699', '#663366'
     ],
@@ -10,90 +10,16 @@ Ext.define('Charts', {
         color = colorSet[number];
         return color;
     },
-    getTargetSerieColor: function(name, num) {
-        //          console.log(name, num);
-        var color;
-        switch (num) {
-            case 0:
-                color = 'yellow'
-                break;
-            case 1:
-                color = 'red'
-                break;
-
-        }
-        return color;
-    },
-    getSerieColor: function(name, num, target) {
-        var color;
-        switch (name) {
-            case 'Дальний Восток':
-                color = '#00FFFE'
-                break;
-            case 'Поволжье':
-                color = '#009900'
-                break;
-            case 'Северо-Запад':
-                color = '#DE8400'
-                break;
-            case 'Урал':
-                color = '#FF33CC'
-                break;
-            case 'Юг':
-                color = '#38EA00'
-                break;
-            case 'Сибирь':
-                color = '#9F8AB8'
-                break;
-            case 'Центр':
-                color = '#FF0000'
-                break;
-            case 'Москва и Московская область':
-                color = '#0000FF'
-                break;
-            case 'БЕР':
-                color = '#CC3300'
-                break;
-            case 'Стратегический':
-                color = '#0000FF'
-                break;
-            case 'Стабильный':
-                color = '#00FFFE'
-                break;
-            case 'Сильный':
-                color = '#38EA00'
-                break;
-            case 'Регионы роста':
-                color = '#FF33CC'
-                break;
-            case 'Паритетный лидер':
-                color = '#FF0000'
-                break;
-            default:
-                color = this.getRandomColor(num);
-        }
-        if (target) {
-            color = '#0000FF';
-        }
-        return color;
-    },
-    getKpiChart: function(chartPan, reg, aggr, srvName, target) {
+    getKpiChart: function(chartPan, reg, aggr, srvName) {
         return {
             chart: {
                 zoomType: 'xy',
                 animation: true,
-                renderTo: chartPan.getEl().dom.firstChild, // запихиваем графики на уровень ниже из-за осоенностей фреймворка
+                renderTo: chartPan.getEl().dom.firstChild, // запихиваем графики на уровень ниже из-за особенностей фреймворка
                 aggr: aggr,
-                srv: srvName,
-                //                    backgroundColor: target ? "green" : "#FFFFFF"
+                srv: srvName
             },
             credits: {
-                //                    text: 'Портал ДПиОС ЕЦУС',
-                //                    href: '/allmodules/',
-                //                    position: {
-                //                         align: 'left',
-                //                         x: 10
-                //                    }
                 enabled: false
             },
             noData: {
@@ -102,14 +28,6 @@ Ext.define('Charts', {
                     fontSize: '15px',
                     color: '#303030'
                 }
-            },
-            title: {
-                x: -20,
-                style: {
-                    fontSize: "12px",
-                    fontWeight: 'bold'
-                },
-                text: reg
             },
             labels: {},
             exporting: {
@@ -144,14 +62,7 @@ Ext.define('Charts', {
                                         i = 0,
                                         j, row, date;
                                     rows[0] = ['Дата'];
-                                    //                                             rows[0][0] = "Регион";
-                                    //                                             rows[0][1] = 'test1';
-                                    //                                             rows[0][2] = "Проценты";
-                                    //                                             console.log(this, rows);
-                                    //                                             console.log(this.series[0].data);
-                                    //                                             rows[0][0]='Дата'
                                     Ext.Array.each(this.series, function(item, i) {
-                                        //                                                  console.log(item);
                                         if (item.type !== 'column')
                                             rows[0].push(item.name);
                                         Ext.Array.each(item.data, function(data, j) {
@@ -176,16 +87,6 @@ Ext.define('Charts', {
                                             rows[j].push(String(data.y));
                                         });
                                     });
-                                    //                                             console.log(rows, j);
-                                    //                                             for (chart in this.series[0].points) {
-                                    //                                                  if (typeof (rows[i]) === "undefined") {
-                                    //                                                       rows[i] = [];
-                                    //                                                  }
-                                    //                                                  rows[i][0] = this.series[0].points[chart].name;
-                                    //                                                  rows[i][1] = this.series[0].points[chart].y;
-                                    //                                                  rows[i][2] = this.series[0].points[chart].percentage;
-                                    //                                                  i++;
-                                    //                                             }
                                     j = rows.length;
                                     rows[0] = rows[0].join(itemDelimiter);
                                     for (row = 1; row < j; row++) {
@@ -214,14 +115,15 @@ Ext.define('Charts', {
             series: []
         };
     },
-    getXAxis: function(visible, target) {
+    getXAxis: function(visible) {
         var result = [];
         result = [{
+            categories: [],
             type: 'datetime',
             dateTimeLabelFormats: {
                 day: '%e. %b'
             },
-            visible: target ? true : visible,
+            visible: visible,
             tickPixelInterval: 120
         }];
         return result;
@@ -235,12 +137,6 @@ Ext.define('Charts', {
                 text: null
             },
             min: null,
-            //                    min: 0,
-            //                    plotLines: [{
-            //                              value: 0,
-            //                              width: 1,
-            //                              color: '#808080'
-            //                         }],
             lineWidth: 1
         }];
         return result;
@@ -251,9 +147,7 @@ Ext.define('Charts', {
         switch (pointInterval) {
             case 24 * 7 * 4:
             case 24 * 7:
-                series = {
-                    //                         pointIntervalUnit: 'month'
-                };
+                series = {};
                 break;
             default:
                 series = {
@@ -286,107 +180,53 @@ Ext.define('Charts', {
         };
         return result;
     },
-    getSeries: function(nameRegList, idsRegList, aggr, target) {
+    getSeries: function(nameRegList, idsRegList, aggr) {
         var result = [],
-            that = this,
-            targetArr = ['Целевое значение', 'Допустимое значение'];
+            that = this;
         Ext.Array.each(nameRegList, function(item, i) {
+            if ((nameRegList[i] == 'Трафик на каналах TCH, Эрл') ||
+                (nameRegList[i] == 'Трафик на каналах SDCCH, Эрл') ||
+                (nameRegList[i] == 'Процент обрывов соединений (DCR)') ||
+                (nameRegList[i] == 'Traff_Sp, Erl') ||
+                (nameRegList[i] == 'Drop_Data') ||
+                (nameRegList[i] == 'Block_Data') ||
+                (nameRegList[i] == 'HSDPA_USER_DC_THR, Kbit/s') ||
+                (nameRegList[i] == 'HSUPA_USER_THR, Kbit/s') ||
+                (nameRegList[i] == 'DpH_UE') ||
+                (nameRegList[i] == 'UE_Throughput_DL, Kbit/s') ||
+                (nameRegList[i] == 'UE_Throughput_UL, Kbit/s') ||
+                (nameRegList[i] == 'LTE_User_Max') ||
+                (nameRegList[i] == 'Cell_Count_4G') ||
+                (nameRegList[i] == 'Traff_VoLTE') ||
+                (nameRegList[i] == 'E-RAB Retainability_Sharing') ||
+                (nameRegList[i] == 'Downlink Thp_Sharing') ||
+                (nameRegList[i] == 'Uplink Thp_Sharing')) {
+                s = 1;
+            } else {
+                s = 0;
+            }
             var srv = item,
                 serie;
             serie = {
                 type: 'spline',
                 marker: {
-                    //                              enabled: false,
                     radius: 1.2,
                     symbol: 'circle'
                 },
                 animation: false,
-                color: that.getSerieColor(item, i, target),
+                color: that.getRandomColor(i),
                 name: srv,
                 regionId: idsRegList[i],
-                tooltip: {
-                    //                         valueSuffix: ' Шт.'
-                },
-                yAxis: 0,
+                yAxis: s,
                 zIndex: 100,
-                data: [],
-                events: {
-                    click: function(event) {
-                        var that = this,
-                            time = aggr === 'Weekly' || aggr === 'Monthly' ? event.point.category : event.point.x / 1000,
-                            timeTitle = aggr === 'Weekly' || aggr === 'Monthly' ? event.point.category : Ext.Date.format(new Date(event.point.x), 'Y-m-d'),
-                            srv = that.chart.options.chart.srv;
-                        if ((aggr === 'Daily') & (srv === 'S_DOWNTIME_SUM')) {
-                            Ext.create('Ext.window.Window', {
-                                width: 1280,
-                                height: 720,
-                                border: false,
-                                modal: true,
-                                closable: false,
-                                title: 'Топ инцидентов по региону ' + that.name + ' за ' + timeTitle + '. Суммарное время простоя в часах - ' + event.point.y,
-                                paramsForReg: {
-                                    aggr: aggr,
-                                    regId: that.options.regionId,
-                                    time: time,
-                                    downtime: event.point.y
-                                },
-                                layout: {
-                                    type: 'fit'
-                                },
-                                items: [{
-                                    xtype: 'incidents',
-                                    buttons: [{
-                                            text: 'Открыть в Remedy',
-                                            listeners: {
-                                                click: function() {
-                                                    var grid = Ext.ComponentQuery.query('grid[reference=incidentList]')[0],
-                                                        incNum = grid.getSelection()[0].data.REQUEST_ID;
-                                                    //                                                                           console.log(grid.getSelection());
-                                                    window.open("http://remedy.msk.mts.ru/arsys/forms/remedy-prom/I2%3AIncidents/Default+Administrator+View/?eid=" + incNum);
+                data: []
 
-                                                }
-                                            }
-                                        },
-                                        {
-                                            text: 'Выход',
-                                            listeners: {
-                                                click: function() {
-                                                    this.up('window').close();
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }]
-                            }).show();
-                        }
-                    }
-                }
             };
             result.push(serie);
-            if (target) {
-                Ext.Array.each(targetArr, function(item, i) {
-                    //                         console.log(item, i);
-                    result.push({
-                        type: 'area',
-                        marker: {
-                            enabled: false,
-                            //                         radius: 0,
-                            //                         symbol: 'circle'
-                        },
-                        animation: false,
-                        color: that.getTargetSerieColor(item, i),
-                        name: item,
-                        yAxis: 0,
-                        showInLegend: false,
-                        data: [],
-                        zIndex: i
-                    });
-                });
-            }
         });
         return result;
     },
-    getTooltip: function(tipType, target) {
+    getTooltip: function(tipType) {
         var tooltip, shared = true,
             enabled = true;
         switch (tipType) {
@@ -398,13 +238,11 @@ Ext.define('Charts', {
                 break;
         }
         tooltip = {
-            xDateFormat: '%d-%m-%Y ',
-            shared: target ? false : shared,
+            xDateFormat: '%d-%m-%Y %H:%M',
+            shared: shared,
             enabled: enabled,
             crosshairs: { width: 2 },
             headerFormat: '<span style="font-size: 8px">{point.key}</span><br/>',
-            //                    pointFormat: '{point.name}',
-            //               shape: 'square',
             borderWidth: 1,
             shadow: false,
             style: {
@@ -412,9 +250,6 @@ Ext.define('Charts', {
                 width: 0,
                 fontSize: '0.8em'
             }
-            //               formatter: function(){
-            //                    console.log(this);
-            //               }
         };
         return tooltip;
     },
@@ -432,34 +267,120 @@ Ext.define('Charts', {
         };
         return legend;
     },
-    getChart: function(nameRegList, chartPan, reg, chartSettings, idsRegList, srvName, target) {
-        var chart = this.getKpiChart(chartPan, reg, chartSettings.aggr, srvName, target);
-        //          chart.colors = this.getColorsForTech(kpi);
-        //          chart.colors = this.getChartColors();
-        chart.xAxis = this.getXAxis(chartSettings.xAxis, target);
-        chart.yAxis = this.getYaxis();
-        chart.plotOptions = this.getPlotOptions(chartSettings.pointInterval);
-        chart.series = this.getSeries(nameRegList, idsRegList, chartSettings.aggr, target);
-        chart.tooltip = this.getTooltip(chartSettings.tooltip, target);
-        chart.legend = this.getLegend(chartSettings.legend);
-        return chart;
+    getTitle: function(enabled, reg) {
+        var title;
+        title = {
+            enabled: enabled,
+            text: reg,
+            y: 15,
+            style: {
+                fontWeight: 'bold',
+                fontSize: '14px'
+            }
+        };
+        return title;
     },
-    getColorsForTech: function(kpi) {
-        var colors;
-        switch (kpi) {
-            case '2G':
-            case '2G_CORE':
-                colors = ['#99FFCC', '#006633', '#33CC99', '#009933', '#CC33FF', '#FF3300', '#FF9966'];
-                break;
-            case '3G':
-            case '3G_CORE':
-                colors = ['#99FFFF', '#0066CC', '#33CCFF', '#0000FF', '#CC33FF', '#FF3300', '#FF9966'];
-                break;
-            case '4G':
-            case '4G_CORE':
-                colors = ['#FFCCFF', '#CC66CC', '#6699FF', '#FF66FF', '#CC33FF', '#FF3300', '#FF9966'];
-                break;
+    getChart: function(nameRegList, chartPan, reg, chartSettings, idsRegList, srvName) {
+        var chart = this.getKpiChart(chartPan, reg, chartSettings.aggr, srvName);
+        chart.xAxis = this.getXAxis(chartSettings.xAxis);
+        if (srvName == '2G Traffic, CSSR, Availability') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'CSSR, BSS_Availability_Rate' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'Трафик на каналах TCH, SDCCH' },
+                opposite: true
+            }];
+        } else if (srvName == '2G DCR, BCR') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'BCR_серв., Процент блокировок на SDCCH' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'DCR' },
+                opposite: true
+            }];
+        } else if (srvName == '3G SP') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'CSSR_Sp, Drop_Sp, Block_Sp, RAN_Availability' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'Traff_Sp' },
+                opposite: true
+            }];
+        } else if (srvName == '3G Data') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'CSSR_Data' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'Drop_Data, Block_Data' },
+                opposite: true
+            }];
+        } else if (srvName == '3G Data Traffic, THR') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'Traff_Data, KB' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'THR, Kbit/s' },
+                opposite: true
+            }];
+        } else if (srvName == '4G DPH_UE, CSSR_LTE') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'CSSR_LTE, LTE_RAN_Avail' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'DpH_UE' },
+                opposite: true
+            }];
+        } else if (srvName == '4G Traffic, Thr, User_Max') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'Traff_Data, KB' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'UE_Thr, LTE_User_Max, CELL_Count_4G' },
+                opposite: true
+            }];
+        } else if (srvName == '4G VoLTE') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'CSSR_VoLTE, DpH_VoLTE_UE' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'Traff_VoLTE' },
+                opposite: true
+            }];
+        } else if (srvName == '4G Sharing') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'InitialEPSBEstabSR_Sharing, CellAvailability_Sharing' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'E-RAB Retainability_Sharing' },
+                opposite: true
+            }];
+        } else if (srvName == '4G Sharing Traffic, Thp') {
+            chart.yAxis = [{
+                labels: { format: '{value}' },
+                title: { text: 'Traff_Sharing' }
+            }, {
+                labels: { format: '{value}' },
+                title: { text: 'Thp_Sharing' },
+                opposite: true
+            }];
+        } else {
+            chart.yAxis = this.getYaxis();
         }
-        return colors;
+        chart.plotOptions = this.getPlotOptions(chartSettings.pointInterval);
+        chart.series = this.getSeries(nameRegList, idsRegList, chartSettings.aggr);
+        chart.tooltip = this.getTooltip(chartSettings.tooltip);
+        chart.legend = this.getLegend(chartSettings.legend);
+        chart.title = this.getTitle(chartSettings.titles, reg);
+        return chart;
     }
 });

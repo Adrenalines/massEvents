@@ -5,49 +5,108 @@
  *
  * TODO - Replace this content of this view to suite the needs of your application.
  */
-Ext.define('MassEvents.view.main.Main', {
-    extend: 'Ext.panel.Panel',
-    xtype: 'app-main',
 
-    requires: [
-        'Ext.plugin.Viewport',
-        'Ext.window.MessageBox',
-
-        'MassEvents.view.main.MainController',
-        'MassEvents.view.main.MainModel',
-        'MassEvents.view.trees.mainTreesPan',
-        'MassEvents.view.options.mainOptionsPan',
-        'MassEvents.view.chart.mainChartPan'
-    ],
-
-    controller: 'main',
-    viewModel: 'main',
-    layout: {
-        type: 'border',
-        //align: 'stretch'
-    },
-    defaults: {
-        border: 2
-    },
-    items: [{
-            xtype: 'trees',
-            flex: 0.23,
-            region: 'west'
+Ext.define("MassEvents.view.main.Main", {
+  extend: "Ext.panel.Panel",
+  xtype: "app-main",
+  requires: [
+    "Ext.plugin.Viewport",
+    "Ext.window.MessageBox",
+    "MassEvents.view.chart.toolbar",
+    "MassEvents.view.main.MainController",
+    "MassEvents.view.main.MainModel",
+    "MassEvents.view.trees.mainTreesPan",
+    "MassEvents.view.trees.mainTreesPanLoad",
+    "MassEvents.view.options.mainOptionsPan",
+    "MassEvents.view.chart.mainChartPan",
+    "MassEvents.view.chart.mainLoadPan"
+  ],
+  controller: "main",
+  viewModel: "main",
+  layout: "fit",
+  items: {
+    xtype: "tabpanel",
+    name: "maintemplate",
+    items: [
+      {
+        xtype: "panel",
+        name: "viewTab",
+        title: "Представление",
+        layout: {
+          type: "border"
         },
-        {
-            xtype: 'charts',
-            region: 'center',
-            flex: 1,
-            //               layout: 'vbox',
-            reference: 'chartsPanel'
+        defaults: {
+          border: 2
         },
-        {
-            xtype: 'options',
-            flex: 0.2,
-            region: 'east'
+        items: [
+          {
+            xtype: "trees",
+            flex: 1.2,
+            region: "west",
+            split: true
+          },
+          {
+            xtype: "charts",
+            region: "center",
+            flex: 4,
+            reference: "chartsPanel"
+          },
+          {
+            xtype: "options",
+            flex: 0.8,
+            region: "east"
+          }
+        ],
+        listeners: {
+          afterrender: "onRenderMain"
+        }
+      },
+      {
+        xtype: "panel",
+        name: "loadTab",
+        title: "Выгрузка",
+        layout: {
+          type: "border"
         },
-    ],
-    listeners: {
-        afterrender: 'onRenderMain'
+        defaults: {
+          border: 2
+        },
+        items: [
+          {
+            xtype: "treesLoad",
+            flex: 1.2,
+            region: "west",
+            split: true
+          },
+          {
+            xtype: "load",
+            region: "center",
+            flex: 4.8
+          }
+        ]
+      }
+    ]
+  },
+  listeners: {
+    render: function(e) {
+      Ext.Ajax.request({
+        url: "./data/auth.php",
+        params: {},
+        scope: this,
+        success: function(r) {
+          var response = Ext.decode(r.responseText);
+          Global.resp = response.USER;
+          if (
+            !(
+              Global.resp.USER == "yvyego47" ||
+              Global.resp.USER == "mgpopche" ||
+              Global.resp.USER == "nakalmyk"
+            )
+          ) {
+            e.items.items[0].items.items[1].disable();
+          }
+        }
+      });
     }
+  }
 });

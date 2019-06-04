@@ -12,10 +12,10 @@ Ext.define('MassEvents.view.options.mainOptionsPan', {
     viewModel: {
         type: 'options-mainoptionspan'
     },
-    collapsed: true,
+    collapsed: false,
     collapsible: true,
     collapseFirst: false,
-    hideCollapseTool: true,
+    hideCollapseTool: false,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -33,7 +33,6 @@ Ext.define('MassEvents.view.options.mainOptionsPan', {
                 align: 'stretch'
             },
             defaults: {
-                //                    xtype: 'combo',
                 flex: 1
             },
             items: [{
@@ -68,57 +67,10 @@ Ext.define('MassEvents.view.options.mainOptionsPan', {
             margin: '10',
             items: [{
                     bind: {
-                        boxLabel: '{elRender.target}'
+                        boxLabel: '{elRender.titles}'
                     },
-                    name: 'target',
-                    //                         checked: true,
-                    listeners: {
-                        change: 'onTargetChange'
-                    }
-                },
-                {
-                    bind: {
-                        boxLabel: '{elRender.onlyTarget}'
-                    },
-                    name: 'onlyTarget',
-                    disabled: true,
-                    //                         checked: true
-                },
-                {
-                    xtype: 'label',
-                    bind: {
-                        text: '{elRender.labelHints}'
-                    },
-                    itemId: 'hints',
-                    name: 'hints'
-                },
-                {
-                    xtype: 'radio',
-                    name: 'hints',
-                    bind: {
-                        boxLabel: '{elRender.shared}'
-                    },
-                    inputValue: 'shared',
-                    margin: '5 0 0 15',
+                    name: 'TitlesChartShowed',
                     checked: true
-                },
-                {
-                    xtype: 'radio',
-                    name: 'hints',
-                    bind: {
-                        boxLabel: '{elRender.noshared}'
-                    },
-                    inputValue: 'noshared',
-                    margin: '0 0 0 15'
-                },
-                {
-                    xtype: 'radio',
-                    name: 'hints',
-                    bind: {
-                        boxLabel: '{elRender.disabled}'
-                    },
-                    inputValue: 'disabled',
-                    margin: '0 0 10 15'
                 },
                 {
                     bind: {
@@ -132,7 +84,6 @@ Ext.define('MassEvents.view.options.mainOptionsPan', {
                         boxLabel: '{elRender.xAxisLabelsShowed}'
                     },
                     name: 'xAxisLabelsShowed',
-                    //                         checked: true
                 }
             ]
         },
@@ -165,25 +116,6 @@ Ext.define('MassEvents.view.options.mainOptionsPan', {
                         boxLabel: '{renderer.table}'
                     },
                     inputValue: 'table'
-                },
-                {
-                    xtype: 'radio',
-                    name: 'rbNeworCurrentTab',
-                    bind: {
-                        boxLabel: '{renderer.newTab}'
-                    },
-                    inputValue: 'newTab',
-                    margin: '5 0 0 0'
-                        //                         checked: true
-                },
-                {
-                    xtype: 'radio',
-                    name: 'rbNeworCurrentTab',
-                    bind: {
-                        boxLabel: '{renderer.currentTab}'
-                    },
-                    inputValue: 'currentTab',
-                    checked: true
                 }
             ]
         },
@@ -203,8 +135,5 @@ Ext.define('MassEvents.view.options.mainOptionsPan', {
             }]
         }
 
-    ],
-    listeners: {
-        //          afterrender: 'onRenderPanel'
-    }
+    ]
 });
