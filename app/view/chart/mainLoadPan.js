@@ -1,19 +1,15 @@
 Ext.define("MassEvents.view.chart.mainLoadPan", {
   extend: "Ext.tab.Panel",
   xtype: "load",
+  id: "loadTabPanel",
   requires: [
-    "MassEvents.view.chart.mainChartPanController",
-    "MassEvents.view.chart.mainChartPanModel",
+    "MassEvents.view.chart.loadMainController",
     "MassEvents.view.chart.toolbarLoad",
     "MassEvents.view.chart.gridLoad",
     "MassEvents.view.chart.previousGridLoad",
     "MassEvents.view.chart.progressBar"
   ],
-
-  controller: "chart-mainchartpan",
-  viewModel: {
-    type: "chart-mainchartpan"
-  },
+  controller: "loadmain",
   dockedItems: [
     {
       xtype: "loadTBar"
@@ -26,53 +22,50 @@ Ext.define("MassEvents.view.chart.mainLoadPan", {
       icon: "resources/images/refresh-icon.png",
       iconCls: "background-size-contain",
       xtype: "button",
-      iconAlign: "top",
       scale: "medium",
       itemId: "refreshButton",
       tooltip: "Обновить",
-      handler: function() {
-        if (load != undefined) {
-          load.refreshGrid();
-        }
-        previousStore2g.reload();
-        previousStore3g.reload();
-        previousStore4g.reload();
-        previousStore4gShr.reload();
-      }
+      text: "Обновить",
+      handler: "reloadAllStores"
+    },
+    {
+      icon: "resources/images/download-selected-icon.png",
+      iconCls: "background-size-contain",
+      xtype: "button",
+      scale: "medium",
+      itemId: "downloadSelectedButton",
+      id: "downloadSelectedButton",
+      tooltip: "Скачать *.xls (только то, что в таблице ниже)",
+      text: "Скачать",
+      handler: "downloadXlsSelectedPressed"
     },
     {
       icon: "resources/images/download-icon.png",
       iconCls: "background-size-contain",
+      xtype: "button",
       scale: "medium",
       itemId: "downloadButton",
-      tooltip: "Скачать *.xls",
-      handler: function(e) {
-        var b = Ext.getCmp("loadBar");
-        b.setVisible(true);
-        b.updateProgress(
-          0.5,
-          '<div style="font-size:14px;">' + "Идёт загрузка... (%)" + "</div>",
-          true
-        );
-      }
+      id: "downloadButton",
+      tooltip: "Скачать всё *.xls",
+      text: "Скачать всё",
+      handler: "downloadXlsPressed"
     },
     {
       icon: "resources/images/clear-icon.png",
       iconCls: "background-size-contain",
+      xtype: "button",
       scale: "medium",
       itemId: "clearButton",
+      id: "clearButton",
       tooltip: "Очистить ранее выгруженное",
-      handler: "clearTables"
+      text: "Очистить",
+      handler: "clearTablesWindow"
     },
     {
       xtype: "loadProgressBar",
       id: "loadBar",
       hidden: true,
-      listeners: {
-        /*    render: function(e) {
-                                                    e.setVisible(false);
-                                                }*/
-      }
+      listeners: {}
     }
   ]
 });

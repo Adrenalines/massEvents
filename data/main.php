@@ -185,10 +185,76 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'REGION_LOAD_TREE') {
      returnData($data);
 } else
 
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'PL_LOAD_TREE') {
+     $sql1 = "SELECT DISTINCT MREG
+              FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
+              ORDER BY MREG";
+     $result1 = odbc_exec($conn, $sql1);
+     $data = getData($result1);
+     $i = 0;
+     while ($data[$i]) {
+          $data[$i]['id'] = $data[$i]['MREG'];
+          $data[$i]['name'] = $data[$i]['MREG'];
+          $data[$i]['text'] = $data[$i]['MREG'];
+          $data[$i]['expandRegion'] = false;
+          $data[$i]['checked'] = false;
+          $data[$i]['leaf'] = false;
+          $normStrMREG = iconv('utf-8', 'cp1251', $data[$i]['MREG']);
+          $sql2 = "SELECT DISTINCT REG
+                   FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
+                   WHERE MREG = '$normStrMREG'
+                   ORDER BY REG";
+          $result2 = odbc_exec($conn, $sql2);
+          $dt = getData($result2);
+          $j = 0;
+          while ($dt[$j]) {
+               $dt[$j]['id'] = $dt[$j]['REG'];
+               $dt[$j]['name'] = $dt[$j]['REG'];
+               $dt[$j]['text'] = $dt[$j]['REG'];
+               $dt[$j]['expandRegion'] = true;
+               $dt[$j]['checked'] = false;
+               $dt[$j]['leaf'] = false;
+               $dt[$j]['children']['text'] = 'Идёт загрузка...';
+               $dt[$j]['children']['leaf'] = true;
+               $j++;
+          }
+          $data[$i]['children'] = $dt;
+          $i++;
+     }
+     $help['id'] = "KPI по PL не выгружаются, они для выбора BTS/сот";
+     $help['name'] = "KPI по PL не выгружаются, они для выбора BTS/сот";
+     $help['text'] = "KPI по PL не выгружаются, они для выбора BTS/сот";
+     $help['leaf'] = true;
+     array_unshift($data, $help);
+     returnData($data);
+} else
+
+if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'PL_LOAD_TREE_ADD_PL') {
+     $region = iconv('utf-8', 'cp1251', $region);
+     $sql3 = "SELECT DISTINCT NE_SITE_NAME
+               FROM [Stat_Result].[dbo].[T_massEvents_PL_Load_List]
+               WHERE REG = '$region'
+               ORDER BY NE_SITE_NAME";
+     $result3 = odbc_exec($conn, $sql3);
+     $st = getData($result3);
+     $k = 0;
+     while ($st[$k]) {
+          $st[$k]['id'] = $st[$k]['NE_SITE_NAME'];
+          $st[$k]['name'] = $st[$k]['NE_SITE_NAME'];
+          $st[$k]['text'] = $st[$k]['NE_SITE_NAME'];
+          $bt[$k]['expandRegion'] = false;
+          $st[$k]['checked'] = false;
+          $st[$k]['leaf'] = true;
+          $k++;
+     }
+     $data = $st;
+     returnData($data);
+} else
+
 if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'BTS_CELL_LOAD_TREE') {
      $sql1 = "SELECT DISTINCT MREG
-     FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
-     ORDER BY MREG";
+              FROM [Stat_Result].[dbo].[T_massEvents_REGION_Load_List]
+              ORDER BY MREG";
      $result1 = odbc_exec($conn, $sql1);
      $data = getData($result1);
      $i = 0;
@@ -212,10 +278,10 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'BTS_CELL_LOAD_TREE') {
                $dt[$j]['id'] = $dt[$j]['REG'];
                $dt[$j]['name'] = $dt[$j]['REG'];
                $dt[$j]['text'] = $dt[$j]['REG'];
-               $dt[$j]['checked'] = false;
-               $dt[$j]['leaf'] = false;
                $dt[$j]['expandRegion'] = true;
                $dt[$j]['expandBts'] = false;
+               $dt[$j]['checked'] = false;
+               $dt[$j]['leaf'] = false;
                $dt[$j]['children']['text'] = 'Идёт загрузка...';
                $dt[$j]['children']['leaf'] = true;
                $j++;
@@ -239,9 +305,9 @@ if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'BTS_CELL_LOAD_TREE_ADD_BTS
           $bt[$k]['id'] = $bt[$k]['BTS_NAME'];
           $bt[$k]['name'] = $bt[$k]['BTS_NAME'];
           $bt[$k]['text'] = $bt[$k]['BTS_NAME'];
-          $bt[$k]['checked'] = false;
           $bt[$k]['expandRegion'] = false;
           $bt[$k]['expandBts'] = true;
+          $bt[$k]['checked'] = false;
           $bt[$k]['leaf'] = false;
           $bt[$k]['children']['text'] = 'Идёт загрузка...';
           $bt[$k]['children']['leaf'] = true;

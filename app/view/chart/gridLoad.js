@@ -2,18 +2,21 @@ Ext.define("MassEvents.view.chart.gridLoad", {
   extend: "Ext.panel.Panel",
   title: "Прогресс выгрузки",
   xtype: "loadGrid",
+  id: "loadTab",
   dock: "top",
   ui: "top",
   layout: "fit",
   items: [
     {
       xtype: "tabpanel",
+      id: "loadTabByTechnology",
       layout: "fit",
       flex: 1,
       items: [
         {
           xtype: "panel",
           title: "&emsp; 2G &emsp;",
+          id: "tab2g",
           layout: "fit",
           flex: 1,
           bbar: [
@@ -38,12 +41,18 @@ Ext.define("MassEvents.view.chart.gridLoad", {
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                {
+                  xtype: "rownumberer",
+                  hidden: false,
+                  width: 40,
+                  renderer: false
+                },
                 {
                   header: "Managed Object",
+                  hidden: false,
                   height: 40,
                   dataIndex: "Managed_Object",
                   style: "font-weight: bold",
@@ -52,11 +61,12 @@ Ext.define("MassEvents.view.chart.gridLoad", {
                 },
                 {
                   header: "STime",
+                  hidden: false,
                   dataIndex: "STime",
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "TCH Traffic",
@@ -163,6 +173,7 @@ Ext.define("MassEvents.view.chart.gridLoad", {
         },
         {
           xtype: "panel",
+          id: "tab3g",
           title: "&emsp; 3G &emsp;",
           layout: "fit",
           flex: 1,
@@ -188,10 +199,10 @@ Ext.define("MassEvents.view.chart.gridLoad", {
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                { xtype: "rownumberer", width: 40, renderer: false },
                 {
                   header: "Managed Object",
                   height: 40,
@@ -206,7 +217,7 @@ Ext.define("MassEvents.view.chart.gridLoad", {
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "Traff Sp",
@@ -379,6 +390,7 @@ Ext.define("MassEvents.view.chart.gridLoad", {
         },
         {
           xtype: "panel",
+          id: "tab4g",
           title: "&emsp; 4G &emsp;",
           layout: "fit",
           flex: 1,
@@ -404,10 +416,10 @@ Ext.define("MassEvents.view.chart.gridLoad", {
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                { xtype: "rownumberer", width: 40, renderer: false },
                 {
                   header: "Managed Object",
                   height: 40,
@@ -422,7 +434,7 @@ Ext.define("MassEvents.view.chart.gridLoad", {
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "DpH UE",
@@ -573,6 +585,7 @@ Ext.define("MassEvents.view.chart.gridLoad", {
         },
         {
           xtype: "panel",
+          id: "tabSh",
           title: "4G Sharing",
           layout: "fit",
           flex: 1,
@@ -582,7 +595,7 @@ Ext.define("MassEvents.view.chart.gridLoad", {
             },
             {
               xtype: "pagingtoolbar",
-              id: "loadGridTable4gShrBar",
+              id: "loadGridTableShBar",
               ui: "footer",
               displayInfo: true
             },
@@ -593,15 +606,15 @@ Ext.define("MassEvents.view.chart.gridLoad", {
           items: [
             {
               xtype: "grid",
-              id: "loadGridTable4gShr",
+              id: "loadGridTableSh",
               titleAlign: "center",
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                { xtype: "rownumberer", width: 40, renderer: false },
                 {
                   header: "Managed Object",
                   height: 40,
@@ -616,7 +629,7 @@ Ext.define("MassEvents.view.chart.gridLoad", {
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "E-RAB Retainability<br />Sharing",

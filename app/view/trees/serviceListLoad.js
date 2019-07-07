@@ -1,21 +1,3 @@
-let kpiStore = Ext.data.TreeStore({
-  id: "kpiStore",
-  fields: [
-    "id",
-    "text",
-    "tableHourly",
-    "columnHourly",
-    "tableDaily",
-    "columnDaily",
-    "leaf",
-    "checked"
-  ],
-  proxy: {
-    type: "ajax",
-    url: "./data/KPIData.json"
-  }
-});
-
 Ext.define("MassEvents.view.trees.serviceListLoad", {
   extend: "Ext.panel.Panel",
   layout: "fit",
@@ -119,22 +101,24 @@ Ext.define("MassEvents.view.trees.serviceListLoad", {
           typeAhead: true,
           listeners: {
             render: function(e) {
-              let kpiSetStore = Ext.data.Store({
-                storeId: "kpiSetStore",
-                proxy: {
-                  type: "ajax",
-                  url: "./data/load.php",
-                  extraParams: {
-                    table_name: "loadKpiSet",
-                    user: Global.resp.USER
-                  },
-                  reader: {
-                    type: "json",
-                    rootProperty: "data"
+              setTimeout(function() {
+                let kpiSetStore = Ext.data.Store({
+                  storeId: "kpiSetStore",
+                  proxy: {
+                    type: "ajax",
+                    url: "./data/load.php",
+                    extraParams: {
+                      table_name: "loadKpiSet",
+                      user: Global.resp.USER
+                    },
+                    reader: {
+                      type: "json",
+                      rootProperty: "data"
+                    }
                   }
-                }
-              });
-              e.setStore(kpiSetStore);
+                });
+                e.setStore(kpiSetStore);
+              }, 1000);
             }
           }
         },
@@ -207,20 +191,48 @@ Ext.define("MassEvents.view.trees.serviceListLoad", {
                 },
                 success: function(response) {
                   let resp = Ext.decode(response.responseText);
+                  // resp.total == 1 counts, that [USER] == Global.USER
                   if (resp.total == 1) {
-                    Ext.Ajax.request({
-                      url: Global.getUrl("load", "deleteKpiSet"),
-                      method: "POST",
-                      timeout: 60000,
-                      params: {
-                        kpiSet: combo.getValue(),
-                        user: Global.resp.USER
-                      },
-                      success: function(response) {
-                        combo.getStore().reload();
-                        combo.setValue("");
-                      }
+                    let acceptWindow = Ext.create("Ext.window.Window", {
+                      title: "Удалить KPI-сет?",
+                      modal: true,
+                      width: 300,
+                      height: 70,
+                      items: [
+                        {
+                          xtype: "button",
+                          text: "ОК",
+                          style:
+                            "margin-left:30px; margin-top:10px; width:80px;",
+                          handler: function(e) {
+                            Ext.Ajax.request({
+                              url: Global.getUrl("load", "deleteKpiSet"),
+                              method: "POST",
+                              timeout: 60000,
+                              params: {
+                                kpiSet: combo.getValue(),
+                                user: Global.resp.USER
+                              },
+                              success: function(response) {
+                                combo.getStore().reload();
+                                combo.setValue("");
+                              }
+                            });
+                            Ext.WindowManager.getActive().close();
+                          }
+                        },
+                        {
+                          xtype: "button",
+                          text: "Отмена",
+                          style:
+                            "margin-left:70px; margin-top:10px; width:80px;",
+                          handler: function(e) {
+                            Ext.WindowManager.getActive().close();
+                          }
+                        }
+                      ]
                     });
+                    acceptWindow.show();
                   } else {
                     Ext.Msg.alert("Ошибка", "Нельзя удалить общий KPI-сет.");
                     combo.setValue("");
@@ -242,7 +254,7 @@ Ext.define("MassEvents.view.trees.serviceListLoad", {
       id: "checkSrvListLoad",
       name: "checkSrvListLoad",
       reference: "checkSrvListLoad",
-      store: kpiStore,
+      store: Ext.create("MassEvents.store.kpiStore"),
       folderSort: false,
       listeners: {
         checkchange: function(node, checked, eOpts) {

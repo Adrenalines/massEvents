@@ -30,6 +30,30 @@ Ext.define("MassEvents.view.main.Main", {
     items: [
       {
         xtype: "panel",
+        name: "loadTab",
+        title: "Выгрузка",
+        layout: {
+          type: "border"
+        },
+        defaults: {
+          border: 2
+        },
+        items: [
+          {
+            xtype: "treesLoad",
+            flex: 1.2,
+            region: "west",
+            split: true
+          },
+          {
+            xtype: "load",
+            region: "center",
+            flex: 4.8
+          }
+        ]
+      },
+      {
+        xtype: "panel",
         name: "viewTab",
         title: "Представление",
         layout: {
@@ -60,53 +84,7 @@ Ext.define("MassEvents.view.main.Main", {
         listeners: {
           afterrender: "onRenderMain"
         }
-      },
-      {
-        xtype: "panel",
-        name: "loadTab",
-        title: "Выгрузка",
-        layout: {
-          type: "border"
-        },
-        defaults: {
-          border: 2
-        },
-        items: [
-          {
-            xtype: "treesLoad",
-            flex: 1.2,
-            region: "west",
-            split: true
-          },
-          {
-            xtype: "load",
-            region: "center",
-            flex: 4.8
-          }
-        ]
       }
     ]
-  },
-  listeners: {
-    render: function(e) {
-      Ext.Ajax.request({
-        url: "./data/auth.php",
-        params: {},
-        scope: this,
-        success: function(r) {
-          var response = Ext.decode(r.responseText);
-          Global.resp = response.USER;
-          if (
-            !(
-              Global.resp.USER == "yvyego47" ||
-              Global.resp.USER == "mgpopche" ||
-              Global.resp.USER == "nakalmyk"
-            )
-          ) {
-            e.items.items[0].items.items[1].disable();
-          }
-        }
-      });
-    }
   }
 });

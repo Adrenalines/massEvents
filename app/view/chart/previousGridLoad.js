@@ -2,6 +2,7 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
   extend: "Ext.panel.Panel",
   title: "Ранее выгружено",
   xtype: "previousGrid",
+  id: "previousLoadTab",
   dock: "top",
   ui: "top",
   layout: "fit",
@@ -37,36 +38,15 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
               id: "previousGridTable2g",
               titleAlign: "center",
               listeners: {
-                render: function(e) {
-                  let self = this,
-                    bar = e.up("panel").down("pagingtoolbar"),
-                    store = Ext.create("MassEvents.store.previousLoadStore2g");
-                  store.on({
-                    load: function(store, records, success) {
-                      let columns = e.getColumns();
-                      for (let column of columns) {
-                        if (column.fullColumnIndex >= 3) {
-                          store.each(function(record, idx) {
-                            if (record.get(column.dataIndex) !== "") {
-                              column.setHidden(false);
-                              return false;
-                            }
-                          });
-                        }
-                      }
-                      bar.setStore(store);
-                      e.setStore(store);
-                    }
-                  });
-                }
+                render: "previousStoreLoad"
               },
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                { xtype: "rownumberer", width: 40, renderer: false },
                 {
                   header: "Managed Object",
                   height: 40,
@@ -81,7 +61,7 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "TCH Traffic",
@@ -211,36 +191,15 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
               id: "previousGridTable3g",
               titleAlign: "center",
               listeners: {
-                render: function(e) {
-                  let self = this,
-                    bar = e.up("panel").down("pagingtoolbar"),
-                    store = Ext.create("MassEvents.store.previousLoadStore3g");
-                  store.on({
-                    load: function(store, records, success) {
-                      let columns = e.getColumns();
-                      for (let column of columns) {
-                        if (column.fullColumnIndex >= 3) {
-                          store.each(function(record, idx) {
-                            if (record.get(column.dataIndex) !== "") {
-                              column.setHidden(false);
-                              return false;
-                            }
-                          });
-                        }
-                      }
-                      bar.setStore(store);
-                      e.setStore(store);
-                    }
-                  });
-                }
+                render: "previousStoreLoad"
               },
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                { xtype: "rownumberer", width: 40, renderer: false },
                 {
                   header: "Managed Object",
                   height: 40,
@@ -255,7 +214,7 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "Traff Sp",
@@ -451,36 +410,15 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
               id: "previousGridTable4g",
               titleAlign: "center",
               listeners: {
-                render: function(e) {
-                  let self = this,
-                    bar = e.up("panel").down("pagingtoolbar"),
-                    store = Ext.create("MassEvents.store.previousLoadStore4g");
-                  store.on({
-                    load: function(store, records, success) {
-                      let columns = e.getColumns();
-                      for (let column of columns) {
-                        if (column.fullColumnIndex >= 3) {
-                          store.each(function(record, idx) {
-                            if (record.get(column.dataIndex) !== "") {
-                              column.setHidden(false);
-                              return false;
-                            }
-                          });
-                        }
-                      }
-                      bar.setStore(store);
-                      e.setStore(store);
-                    }
-                  });
-                }
+                render: "previousStoreLoad"
               },
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                { xtype: "rownumberer", width: 40, renderer: false },
                 {
                   header: "Managed Object",
                   height: 40,
@@ -495,7 +433,7 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "DpH UE",
@@ -655,7 +593,7 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
             },
             {
               xtype: "pagingtoolbar",
-              id: "previousGridTable4gShrBar",
+              id: "previousGridTableShBar",
               ui: "footer",
               displayInfo: true
             },
@@ -666,41 +604,18 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
           items: [
             {
               xtype: "grid",
-              id: "previousGridTable4gShr",
+              id: "previousGridTableSh",
               titleAlign: "center",
               listeners: {
-                render: function(e) {
-                  let self = this,
-                    bar = e.up("panel").down("pagingtoolbar"),
-                    store = Ext.create(
-                      "MassEvents.store.previousLoadStore4gShr"
-                    );
-                  store.on({
-                    load: function(store, records, success) {
-                      let columns = e.getColumns();
-                      for (let column of columns) {
-                        if (column.fullColumnIndex >= 3) {
-                          store.each(function(record, idx) {
-                            if (record.get(column.dataIndex) !== "") {
-                              column.setHidden(false);
-                              return false;
-                            }
-                          });
-                        }
-                      }
-                      bar.setStore(store);
-                      e.setStore(store);
-                    }
-                  });
-                }
+                render: "previousStoreLoad"
               },
               viewConfig: {
                 enableTextSelection: true
               },
-              plugins: "gridfilters",
+              plugins: [{ ptype: "gridfilters" }],
               columnLines: true,
               columns: [
-                { xtype: "rownumberer", width: 30, renderer: false },
+                { xtype: "rownumberer", width: 40, renderer: false },
                 {
                   header: "Managed Object",
                   height: 40,
@@ -715,7 +630,7 @@ Ext.define("MassEvents.view.chart.previousGridLoad", {
                   align: "center",
                   style: "font-weight: bold",
                   width: 130,
-                  filter: { type: "date" }
+                  filter: { type: "string" }
                 },
                 {
                   header: "E-RAB Retainability<br />Sharing",

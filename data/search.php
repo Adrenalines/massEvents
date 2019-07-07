@@ -28,10 +28,18 @@ if ($TREE == "slaTreeLoad") {
              SELECT DISTINCT CELLNAME obj
              FROM [Stat_Result].[dbo].[T_massEvents_BTS_CELL_Load_List]
              WHERE CELLNAME like '%{$OBJ}%'";
+} else if ($TREE == "plTreeLoad") {
+     $sql = "SELECT DISTINCT NE_SITE_NAME obj
+             FROM [Stat_Result].[dbo].[T_massEvents_PL_Load_List]
+             WHERE NE_SITE_NAME like '%{$OBJ}%'";
 } else if ($TREE == "slaTree") {
      $sql = "SELECT DISTINCT external_key obj
              FROM [Stat_Result].[dbo].[T_massEvents_GR_List]
              WHERE external_key like '%{$OBJ}%'";
+} else if ($TREE == "plSearch") {
+     $sql = "SELECT top 1 REG obj
+             FROM [Stat_Result].[dbo].[T_massEvents_PL_Load_List]
+             WHERE NE_SITE_NAME = '{$OBJ}'";
 } else if ($TREE == "btsSearch") {
      $sql = "SELECT top 1 REG obj
              FROM [Stat_Result].[dbo].[T_massEvents_BTS_CELL_Load_List]
